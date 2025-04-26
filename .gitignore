@@ -1,0 +1,31 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+
+# Environment folders
+.env/
+.venv/
+env/
+venv/
+
+# Poetry specific files
+.poetry/
+
+# VS Code settings
+.vscode/
+
+# System files (Windows, macOS)
+.DS_Store
+Thumbs.db
+
+# IDE & editor files
+.idea/
+
+# Coverage reports
+.coverage
+*.coveragerc
+
+# Test and build directories
+dist/
+build/
+*.egg-info/

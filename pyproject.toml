@@ -1,0 +1,25 @@
+[project]
+name = "tc-embrapa-fiap"
+version = "1.0.0"
+description = ""
+authors = [
+    {name = "lccsanchez",email = "lccsanchez16@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests (>=2.32.3,<3.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "bs4 (>=0.0.2,<0.0.3)",
+    "flask (>=3.1.0,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{ include = "app" }]
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
