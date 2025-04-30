@@ -11,7 +11,11 @@ dependencies = [
     "requests (>=2.32.3,<3.0.0)",
     "pandas (>=2.2.3,<3.0.0)",
     "bs4 (>=0.0.2,<0.0.3)",
-    "flask (>=3.1.0,<4.0.0)"
+    "flask (>=3.1.0,<4.0.0)",
+    "sqlalchemy (>=2.0.40,<3.0.0)",
+    "flask-sqlalchemy (>=3.1.1,<4.0.0)",
+    "pymysql (>=1.1.1,<2.0.0)",
+    "cryptography (>=44.0.2,<45.0.0)"
 ]
 
 [tool.poetry]
@@ -19,6 +23,9 @@ packages = [{ include = "app" }]
 
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
+alembic = "^1.15.2"
+dotenv = "^0.9.9"
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
