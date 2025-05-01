@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
-from main import app
-from scraper import gerar_json_agrupado
-from urls import urls_processamento
+from app.main import app
+from app.scraper import gerar_json_agrupado
+from app import urls
 
 @app.route("/")
 def home():
@@ -9,4 +9,4 @@ def home():
 
 @app.route("/processamento")
 def get_processamento():
-    return jsonify(gerar_json_agrupado(urls_processamento))
+    return jsonify(gerar_json_agrupado(urls.urls_processamento))
