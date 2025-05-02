@@ -1,12 +1,13 @@
-from flask import Flask, jsonify
-from app.main import app
-from app.scraper import gerar_json_agrupado
-from app import urls
+from flask import jsonify, Blueprint
+from .scraper import gerar_json_agrupado
+from .urls import urls_processamento
 
-@app.route("/")
+processamento = Blueprint('processamento', __name__)
+
+@processamento.route("/")
 def home():
     return 'Bem Vindo à API de Dados da Vitivinicultura da Embrapa!'
 
-@app.route("/processamento")
+@processamento.route("/processamento")
 def get_processamento():
-    return jsonify(gerar_json_agrupado(urls.urls_processamento))
+    return jsonify(gerar_json_agrupado(urls_processamento))

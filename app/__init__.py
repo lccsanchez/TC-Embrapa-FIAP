@@ -1,12 +1,16 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from app.models import Base
+from .models import Base
 
-# Inicializa o Flask e o SQLAlchemy
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
+db = SQLAlchemy(model_class=Base)
 
-db = SQLAlchemy(app, model_class=Base)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_pyfile('config.py')
+    
+    db.init_app(app)
 
-# Importa os módulos para registrar rotas e modelos
-from app import routes
+    from .routes import processamento
+    app.register_blueprint(processamento)
+
+    return app
