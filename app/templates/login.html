@@ -1,19 +1,42 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-    <h2>Login</h2>
-    <form method="POST">
-        <label for="username">Usuário:</label>
-        <input type="text" id="username" name="username" required><br><br>
+{% extends 'template.html' %}
 
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required><br><br>
+{% block title %}Portal API Embrapa - Login{% endblock %}
 
-        <button type="submit">Entrar</button>
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-sm bg-white p-8 rounded-lg shadow-lg container-conteudo">
+        <h1 class="text-3xl font-bold text-center mb-2 text-gray-800">Portal API Embrapa</h1>
+        <p class="text-center text-gray-600 mb-6">Login</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('auth.autenticar') }}">
+            <input type="hidden" name="proxima" value="{{ proxima or url_for('home.index') }}">
+            <div class="mb-4">
+                <label for="user" class="block text-sm font-medium text-gray-700">Usuário</label>
+                <input type="text" id="user" name="user" required class="campo-texto mt-1">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="password" name="password" required class="campo-texto mt-1">
+            </div>
+
+            <button type="submit" class="w-full botao-primario mb-4">Entrar</button>
+
+            <div class="text-center">
+                <a class="text-sm text-purple-700 hover:underline">Cadastrar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

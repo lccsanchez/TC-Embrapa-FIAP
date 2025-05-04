@@ -232,81 +232,41 @@ def agrupar_dados(urls_dict: dict) -> pd.DataFrame:
 
     return dados_agrupados
 
-def gerar_json_agrupado(url: dict):
-    """
-    Gera uma estrutura JSON agrupada a partir de dados fornecidos.
-    Esta função organiza os dados em uma estrutura hierárquica baseada em 
-    classificação, ano, categoria e produtos, retornando um dicionário 
-    estruturado.
-    Args:
-        url (dict): Um dicionário contendo os dados a serem agrupados. 
-        Espera-se que os dados possuam as colunas "classificacao", "ano", 
-        "categoria", "produto" e "quantidade".
-    Returns:
-        dict: Um dicionário estruturado no seguinte formato:
-                "classificacao1": [
-                        "ano": "ano1",
-                        "categorias": [
-                                "categoria": "categoria1",
-                                "produtos": [
-                                    {"produto": "produto1", "quantidade": valor1},
-                                    {"produto": "produto2", "quantidade": valor2},
-                                    ...
-                                ]
-                            },
-                            ...
-                        ]
-                    },
-                    ...
-                ],
-                ...
-    """
+def gerar_json_hierarquico_operacoes(df: pd.DataFrame) -> dict:
+    
+    resultado = {}
 
-    dados_agrupados = agrupar_dados(url)
+    for _, row in df.iterrows():
+        categoria = row["categoria"]
+        produto = row["produto"]
+        ano = row["ano"]
+        quantidade = row["quantidade"]
 
-    estrutura_final = {}
+        if "classificacao" in df.columns:
+            classificacao = row["classificacao"]
+            resultado.setdefault(classificacao, {}).setdefault(str(ano), {}).setdefault(categoria, {}).setdefault(produto, {})['quantidade'] = quantidade
 
-    # Agrupando os dados por classificação
-    for classificacao, df_class in dados_agrupados.groupby("classificacao"):
-        anos_list = []
+        else:
+            resultado.setdefault(str(ano), {}).setdefault(categoria, {}).setdefault(produto, {})['quantidade'] = quantidade
 
-        # Agrupando os dados por ano dentro de cada classificação
-        for ano, df_ano in df_class.groupby("ano"):
-            categorias_list = []
+    return resultado
 
-            # Agrupando os dados por categoria dentro de cada ano
-            for categoria, df_categoria in df_ano.groupby("categoria"):
-                produtos_list = []
+def filtrar_dados(df: pd.DataFrame, classificacao: str = None, ano: int = None, categoria: str = None) -> dict:
+    
+    df_filtrado = df.copy()
 
-                # Iterando sobre as linhas de cada categoria para montar a lista de cultivares
-                for _, linha in df_categoria.iterrows():
-                    produtos_list.append(
-                        {
-                            "produto": linha["produto"],
-                            "quantidade": linha["quantidade"],
-                        }
-                    )
+    if 'classificacao' in df_filtrado.columns and df_filtrado['classificacao'].nunique() <= 1:
+        df_filtrado = df_filtrado.drop(columns=['classificacao'])
 
-                # Adicionando a categoria com a lista de cultivares à lista de categorias
-                categorias_list.append(
-                    {"categoria": categoria, "produtos": produtos_list}
-                )
+    if classificacao and 'classificacao' in df.columns:
+        df_filtrado = df_filtrado[df_filtrado['classificacao'] == classificacao]
+    if ano:
+        df_filtrado = df_filtrado[df_filtrado['ano'] == int(ano)]
+    if categoria:
+        df_filtrado = df_filtrado[df_filtrado['categoria'] == categoria]
 
-            # Ordenando as categorias por nome
-            categorias_list = sorted(categorias_list, key=lambda x: x["categoria"])
-
-            # Adicionando o ano com a lista de categorias à lista de anos
-            anos_list.append(
-                {
-                    "ano": str(ano),  # Convertendo o ano para string
-                    "categorias": categorias_list,
-                }
-            )
-
-        # Ordenando os anos por ordem crescente
-        anos_list = sorted(anos_list, key=lambda x: int(x["ano"]))
-
-        # Adicionando a classificação com a lista de anos à estrutura final
-        estrutura_final[classificacao] = anos_list
-
-    return estrutura_final
+    if df_filtrado.empty:
+        return {"message": "Nenhum dado encontrado para os filtros aplicados."}
+    
+    resultado = gerar_json_hierarquico_operacoes(df_filtrado)
+    return resultado

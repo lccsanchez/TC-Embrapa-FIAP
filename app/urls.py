@@ -11,7 +11,7 @@ itens_producao = ['Producao']
 url_base = 'http://vitibrasil.cnpuv.embrapa.br'
 
 url_producao = {
-  item: f'{url_base}/index.php?opcao=opt_04'
+  item: f'{url_base}/index.php?opcao=opt_02'
   for item in itens_producao
 }
 
