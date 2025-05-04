@@ -1,45 +1,22 @@
 from sqlalchemy.orm import Session
-from models import Processamentos, Registros
+from app.models import User
 import pandas as pd
-from scraper import agrupar_dados
+from app.scraper import agrupar_dados
 
-def inserir_dados_no_banco(session: Session, df: pd.DataFrame):
-    
+def inserir_usuario(session: Session, nickname: str, senha: str):
     try:
-        for _, row in df.iterrows():
-            # Verificar se o registro de Processamentos já existe
-            processamento = session.query(Processamentos).filter_by(
-                cultivo=row["cultivar"]
-            ).first()
+        # Verificar se o usuário já existe
+        usuario_existente = session.query(User).filter_by(nickname=nickname).first()
+        if usuario_existente:
+            print(f"Usuário '{nickname}' já existe.")
+            return
 
-            # Se não existir, criar um novo registro
-            if not processamento:
-                processamento = Processamentos(
-                    cultivo=row["cultivar"],
-                    categoria=row["categoria"],
-                    classificacao=row["classificacao"],
-                )
-                session.add(processamento)
-                session.flush()  # Garante que o ID do processamento seja gerado
-
-            # Criar o registro de Registros
-            registro = Registros(
-                id_cultivo=processamento.id,
-                ano=int(row["ano"]),
-                quantidade=float(row["quantidade(kg)"]),
-            )
-            session.add(registro)
-
+        # Criar um novo usuário
+        novo_usuario = User(nickname=nickname, senha=senha)
+        session.add(novo_usuario)
         session.commit()
-        print("Dados inseridos com sucesso!")
+        print(f"Usuário '{nickname}' inserido com sucesso!")
     except Exception as e:
         session.rollback()
-        print(f"Erro ao inserir dados no banco: {e}")
-
-def processar_e_salvar_dados(session: Session, url: dict):
-    
-    df = agrupar_dados(url)
-    if df is not None:
-        inserir_dados_no_banco(session, df)
-
+        print(f"Erro ao inserir usuário: {e}")
 
