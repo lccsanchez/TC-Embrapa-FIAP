@@ -26,7 +26,6 @@ def autenticar():
         if usuario:
             if request.form['password'] == usuario.senha:
                 session['usuario_logado'] = usuario.nickname
-                flash(f'Bem-vindo, {usuario.nickname}!')
                 proxima_pagina = request.form.get('proxima', url_for('home.index'))
                 return redirect(proxima_pagina)
             else:
@@ -42,7 +41,6 @@ def autenticar():
 @auth.route('/logout', methods=['POST'])
 def logout():
     session.pop('usuario_logado', None)
-    flash('Logout efetuado com sucesso!')
     return redirect(url_for('home.index'))
             
 @home.route("/")
