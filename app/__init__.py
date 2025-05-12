@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from app.models import Base
 
-db = SQLAlchemy(model_class=Base)
+db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
@@ -10,11 +10,8 @@ def create_app():
     
     db.init_app(app)
 
-    from routes import processamento, producao, comercio, auth, home
-    app.register_blueprint(processamento)
+    from routes import producao,processamento
     app.register_blueprint(producao)
-    app.register_blueprint(comercio)
-    app.register_blueprint(auth)
-    app.register_blueprint(home)
-
+    app.register_blueprint(processamento)
+    
     return app

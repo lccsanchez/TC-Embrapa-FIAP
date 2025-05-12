@@ -1,15 +1,16 @@
 from sqlalchemy import String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database import Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declarative_base
 
+Base = declarative_base()
 
 class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
     __tablename__ = 'produtos'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    produto: Mapped[str] = mapped_column(String(30), nullable=False)
-    categoria: Mapped[str] = mapped_column(String(20), nullable=False)
-    classificacao: Mapped[str] = mapped_column(String(20), nullable=False)
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    control: Mapped[str] = mapped_column(String(100), nullable=False)
+    produto: Mapped[str] = mapped_column(String(200), nullable=False)
+    categoria: Mapped[str] = mapped_column(String(100), nullable=True)
+    classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     registros: Mapped[list["Registros"]] = relationship('Registros', back_populates='produto', cascade="all, delete-orphan")
 
@@ -19,8 +20,8 @@ class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
 class Registros(Base):  # Classe base para registros de ano e quantidade
     __tablename__ = 'registros'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    id_produto: Mapped[int] = mapped_column(ForeignKey('produtos.id'), nullable=False)  # ID do produto (genérico)
+    id: Mapped[str] = mapped_column(String(50),primary_key=True)
+    id_produto: Mapped[int] = mapped_column(ForeignKey('produtos.id',ondelete="CASCADE"), nullable=False)  # ID do produto (genérico)
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (processamento, produção, comércio)
     ano: Mapped[int] = mapped_column(nullable=False)
     quantidade: Mapped[float] = mapped_column(nullable=False)
@@ -50,14 +51,6 @@ class RegistroComercio(Registros):
         'polymorphic_identity': 'comercio',
     }
 
-class User(Base): 
-    __tablename__ = 'usuarios'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
-    senha: Mapped[str] = mapped_column(String(10), nullable=False)
-
-    def __repr__(self):
-        return f"<User(id={self.id}, nickname='{self.nickname}>"
 
 
