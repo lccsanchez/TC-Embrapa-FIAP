@@ -1,7 +1,7 @@
 from flask import Blueprint
 from service.producao import producao_service
 from service.processamento import processamento_service
-from util import response 
+from util import response  
 
 producao = Blueprint('producao', __name__)
 processamento = Blueprint('processamento', __name__)
