@@ -55,6 +55,7 @@ def add_all(producoes: List[ProcessamentoDto]):
     except Exception as e:
             print(f"Erro no método add_all: {e}")    
             session.rollback()
+            
 
     return producoes
 
