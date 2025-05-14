@@ -4,15 +4,11 @@ from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 from io import StringIO
 
-def read(url, timeout=30):       
+def read(url, timeout=30): 
    
    
-    proxies = {
-   ##"http": "http://156.233.87.213:3129",
-    "http": "http://e77bec8c:mshlekabsl9s@proxy.toolip.io:31111"
-    }
     try:
-        response = requests.get(url, timeout=timeout, verify=False)#, proxies=proxies)
+        response = requests.get(url, timeout=timeout, verify=False)
         response.raise_for_status()  # Verifica erros HTTP
         data = StringIO(response.text)
         separator = detect_separator(response.text)

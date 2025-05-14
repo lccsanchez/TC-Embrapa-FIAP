@@ -8,7 +8,7 @@ itens_comercializacao = ['Comercio']
 itens_producao = ['Producao']
 
 # Urls de todas as páginas que possuem arquivos para download
-url_base = 'http://xptovitibrasil.cnpuv.embrapa.br/download'
+url_base = 'http://vitibrasil.cnpuv.embrapa.br/download'
 
 url_producao = {
     
