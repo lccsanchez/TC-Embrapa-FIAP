@@ -28,7 +28,7 @@ def find_by_year(year: int, classificacao:str) -> List[ProcessamentoDto] | None:
             for item in data:
                 item.registros = collections.filter(
                     item.registros,
-                    lambda registro: registro.ano == year
+                    lambda registro: int(registro.ano) == int(year)
                 )
         return data
     except Exception as e:
