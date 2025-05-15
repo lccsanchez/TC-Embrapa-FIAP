@@ -31,14 +31,13 @@ def execute(urls_dict: dict, separator: str, converter: Callable[[List[Tuple[str
         print(f'Executando leitura de  {key} URL: {url}')
 
         dataframe = __load(url,separator)
-        if not dataframe: 
-            return None
+        if  not dataframe is None: 
         
-        dataframes.append((key,dataframe))
-   
-        if len(dataframes)==0:
-            print("Nenhum dado foi processado.")
-            return None
+            dataframes.append((key,dataframe))
+    
+            if len(dataframes)==0:
+                print("Nenhum dado foi processado.")
+                return None
 
     return converter(dataframes)
 

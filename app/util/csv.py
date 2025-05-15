@@ -8,7 +8,7 @@ def read(url, timeout=30):
    
    
     try:
-        response = requests.get(url, timeout=timeout, verify=False)
+        response = requests.get(url, timeout=(10, 30), verify=False)
         response.raise_for_status()  # Verifica erros HTTP
         data = StringIO(response.text)
         separator = detect_separator(response.text)

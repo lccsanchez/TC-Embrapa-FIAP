@@ -41,14 +41,14 @@ def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[ProducaoDto]
                    
             for _, row in df.iterrows():              
                 producao_anos = [
-                    RegistrosDto(ano=ano, quantidade = 0 if not str(row[ano]).isdigit() else (row[ano]))
+                    RegistrosDto(ano=int(ano), quantidade = 0 if not str(row[ano]).isdigit() else (row[ano]))
                     for ano in ano_colunas
                     if pd.notna(row[ano])
                 ]
                 
                 if producao_anos:
                     producoes.append(ProducaoDto(
-                        id=row['id'],
+                        id=str(row['id']),
                         control=row['control'],
                         produto=row['produto'],
                         registros=producao_anos

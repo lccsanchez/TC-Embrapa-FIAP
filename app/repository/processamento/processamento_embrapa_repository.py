@@ -18,7 +18,7 @@ def find_by_year(year: int, classificacao:str) -> List[ProcessamentoDto] | None:
     try:
         data = etl.execute(urls_processamento,separador_processamento, __converter)
 
-        if not data:
+        if data is None:
             return None
         
         if(not classificacao is None):
@@ -28,7 +28,7 @@ def find_by_year(year: int, classificacao:str) -> List[ProcessamentoDto] | None:
             for item in data:
                 item.registros = collections.filter(
                     item.registros,
-                    lambda registro: registro.ano == year
+                    lambda registro: registro.ano == int(year)
                 )
         return data
     except Exception as e:
