@@ -35,6 +35,13 @@ class ProcessamentoDto(Produto):
     }
 
 
+class ComercioDto(Produto):
+    registros: List[RegistrosDto]
+
+    # Habilita suporte a ORM
+    model_config = {"from_attributes": True}
+
+
 class Pais(BaseModel):
     id: str
     pais: str

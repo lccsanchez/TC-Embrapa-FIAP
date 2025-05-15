@@ -3,10 +3,12 @@ from service.producao import producao_service
 from service.processamento import processamento_service
 from service.importacao import importacao_service
 from service.exportacao import exportacao_service
+from service.comercio import comercio_service
 from util import response 
 
 producao = Blueprint('producao', __name__)
 processamento = Blueprint('processamento', __name__)
+comercializacao = Blueprint("comercializacao", __name__)
 importacao = Blueprint("importacao", __name__)
 exportacao = Blueprint("exportacao", __name__)
 
@@ -34,6 +36,21 @@ def get_processamento(year,classification):
 @producao.route("/processamento",methods=['POST'])
 def processamento_save_all():        
     processamento_service.save_all()
+    return "OK"
+
+
+@comercializacao.route("/comercializacao", defaults={"year": None})
+@comercializacao.route("/comercializacao/<year>")
+def get_comercializacao(year):
+    return response.build_response(
+        comercio_service.find_all()
+        if year is None
+        else comercio_service.find_by_year(year)
+    )
+
+@comercializacao.route("/comercializacao", defaults={"year": None}, methods=["POST"])
+def save_all(year):
+    comercio_service.save_all()
     return "OK"
 
 

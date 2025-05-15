@@ -10,9 +10,10 @@ def create_app():
 
     db.init_app(app)
 
-    from routes import producao,processamento, importacao,exportacao
+    from routes import producao,processamento, importacao,exportacao, comercializacao
     app.register_blueprint(producao)
     app.register_blueprint(processamento)
+    app.register_blueprint(comercializacao)
     app.register_blueprint(importacao)
     app.register_blueprint(exportacao)
 

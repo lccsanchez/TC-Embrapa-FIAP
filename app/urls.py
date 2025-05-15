@@ -29,6 +29,8 @@ url_comercializacao = {
   for item in itens_comercializacao
 }
 
+separador_comercializacao = ";"
+
 urls_importacao = {
   item: f'{url_base}/index.php?subopcao=subopt_0{i}&opcao=opt_05'
   for i, item in zip(range(1,6), itens_importacao)
