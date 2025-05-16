@@ -32,20 +32,20 @@ def find_by_year(year: int) -> List[ProducaoDto] | None:
         return None
 
 def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[ProducaoDto]:
-   
+
     producoes = []
-    
+
     try:
         for _, df in dataframes:          
             ano_colunas = [col for col in df.columns if str(col).isdigit() and len(str(col)) == 4]
-                   
+
             for _, row in df.iterrows():              
                 producao_anos = [
                     RegistrosDto(ano=int(ano), quantidade = 0 if not str(row[ano]).isdigit() else (row[ano]))
                     for ano in ano_colunas
                     if pd.notna(row[ano])
                 ]
-                
+
                 if producao_anos:
                     producoes.append(ProducaoDto(
                         id=str(row['id']),
@@ -53,9 +53,9 @@ def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[ProducaoDto]
                         produto=row['produto'],
                         registros=producao_anos
                     ))
-        
+
         return producoes
-    
+
     except (ValueError, KeyError) as e:
         print(f"[Erro de Dados] Verifique a estrutura do DataFrame: {e}")
         return None

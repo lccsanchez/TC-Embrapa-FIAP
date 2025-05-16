@@ -22,19 +22,25 @@ urls_processamento = {
   item: f'{url_base}/{item}.csv'  
   for item in itens_processamento
 }
-separador_processamento = ";"
+separador_processamento = ""
 
 url_comercializacao = {
   item: f'{url_base}/index.php?opcao=opt_04'
   for item in itens_comercializacao
 }
 
+separador_comercializacao = ";"
+
 urls_importacao = {
   item: f'{url_base}/index.php?subopcao=subopt_0{i}&opcao=opt_05'
   for i, item in zip(range(1,6), itens_importacao)
 }
 
+separador_importacao = ""
+
 urls_exportacao = {
   item: f'{url_base}/index.php?subopcao=subopt_0{i}&opcao=opt_06'
   for i, item in zip(range(1,5), itens_exportacao)
 }
+
+separador_exportacao = ""
