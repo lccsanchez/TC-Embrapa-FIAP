@@ -14,7 +14,7 @@ def find_all():
 def find_by_year(year,classification):
     
     result = processamento_embrapa_repository.find_by_year(year,classification)
-    if result is None:
+    if result is None :
         result = processamento_db_repository.find_by_year(year,classification)
         print("(find_by_year) Obtendo o dado do database")   
     else:
