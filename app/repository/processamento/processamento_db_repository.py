@@ -1,5 +1,5 @@
 import uuid
-from models import Produto, RegistroProcessamento, Registros
+from app.model.entidades import Produto, RegistroProcessamento, Registros
 from dto import ProcessamentoDto, RegistrosDto 
 from sqlalchemy import and_
 

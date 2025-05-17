@@ -1,5 +1,5 @@
 import uuid
-from models import Produto, RegistroComercio,Registros
+from app.model.entidades import Produto, RegistroComercio,Registros
 from dto import ComercioDto, RegistrosDto 
 
 from sqlalchemy.orm import joinedload,with_loader_criteria

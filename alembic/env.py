@@ -3,7 +3,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 from app.config import SQLALCHEMY_DATABASE_URI
-from app.models import Base
+from app.model.entidades import Base
 
 
 # this is the Alembic Config object, which provides

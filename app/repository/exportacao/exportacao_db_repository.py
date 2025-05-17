@@ -1,5 +1,5 @@
 import uuid
-from models import Pais, RegistroExportacao, RegistroImportacaoExportacao
+from app.model.entidades import Pais, RegistroExportacao, RegistroImportacaoExportacao
 from dto import ExportacaoDto, RegistrosImpExpDto
 
 from sqlalchemy.orm import joinedload, with_loader_criteria

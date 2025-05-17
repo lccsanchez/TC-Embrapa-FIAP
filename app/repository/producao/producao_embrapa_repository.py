@@ -1,37 +1,20 @@
+import uuid
 from typing import List,Tuple
 import pandas as pd
 
-from urls import url_producao,separador_producao
-from app.util import collections, etl
-from dto import ProducaoDto, RegistrosDto 
+from urls import url_producao
+from app.util import etl
+from model.entidades import Produto, RegistroProducao 
 
 
-def find_all() -> List[ProducaoDto] | None:   
+def find_all() -> List[Produto] | None:   
     try:
-        return etl.execute(url_producao,separador_producao, __converter)
+        return etl.execute(url_producao, __converter)
     except Exception as e:
         print(f"[Erro] método find_all: {e}")
         return None
 
-
-def find_by_year(year: int) -> List[ProducaoDto] | None:
-    try:
-        data = etl.execute(url_producao,separador_producao, __converter)
-        
-        if not data:
-            return None
-        
-        for item in data:
-            item.registros = collections.filter(
-                item.registros,
-                lambda p: int(p.ano) == int(year)
-            )
-        return data
-    except Exception as e:
-        print(f"[Erro] método find_by_year: {e}")
-        return None
-
-def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[ProducaoDto]:
+def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[Produto]:
 
     producoes = []
 
@@ -41,18 +24,26 @@ def __converter(dataframes: List[Tuple[str, pd.DataFrame]]) -> List[ProducaoDto]
 
             for _, row in df.iterrows():              
                 producao_anos = [
-                    RegistrosDto(ano=int(ano), quantidade = 0 if not str(row[ano]).isdigit() else (row[ano]))
+                    RegistroProducao(
+                        id=str(uuid.uuid4()),                          
+                        tipo_operacao='producao',
+                        ano=int(ano), 
+                        quantidade = 0 if not str(row[ano]).isdigit() else (row[ano])
+                    )
                     for ano in ano_colunas
                     if pd.notna(row[ano])
                 ]
 
                 if producao_anos:
-                    producoes.append(ProducaoDto(
-                        id=str(row['id']),
+                    producoes.append(Produto(
+                        id=str(uuid.uuid4()),
+                        source_id =int(row['id']),
                         control=row['control'],
                         produto=row['produto'],
                         registros=producao_anos
                     ))
+
+             
 
         return producoes
 

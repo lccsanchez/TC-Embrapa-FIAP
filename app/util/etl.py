@@ -4,7 +4,7 @@ from  app.util import csv
 
 T = TypeVar('T') 
 
-def __load(url: str,separator: str, key: str) -> pd.DataFrame:
+def __load(url: str, key: str) -> pd.DataFrame:
 
     print(f'A url final é {url}')
 
@@ -13,7 +13,7 @@ def __load(url: str,separator: str, key: str) -> pd.DataFrame:
         return None
 
     try:
-        csv_dataframe = csv.read(url)
+        csv_dataframe = csv.read(url,10)
 
         print(f'CSV carregado com sucesso: {url}')
 
@@ -24,7 +24,7 @@ def __load(url: str,separator: str, key: str) -> pd.DataFrame:
         print("Tentando carregar o arquivo local...")
 
         try:
-            csv_data = csv.read_local(key,separator)
+            csv_data = csv.read_local(key)
             print(f"Arquivo local carregado com sucesso: {key}")
             return csv_data
 
@@ -32,7 +32,7 @@ def __load(url: str,separator: str, key: str) -> pd.DataFrame:
             print(f"Erro ao carregar o arquivo local: {e}")
             return None
 
-def execute(urls_dict: dict, separator: str, converter: Callable[[List[Tuple[str,pd.DataFrame]]], List[T]]) -> List[T]:  
+def execute(urls_dict: dict, converter: Callable[[List[Tuple[str,pd.DataFrame]]], List[T]]) -> List[T]:  
 
     dataframes : List[Tuple[str,pd.DataFrame]] = []
 
@@ -41,7 +41,7 @@ def execute(urls_dict: dict, separator: str, converter: Callable[[List[Tuple[str
         print(f'Executando leitura de  {key} URL: {url}')
 
 
-        dataframe = __load(url,separator,key)
+        dataframe = __load(url,key)
         
         if dataframe is None or dataframe.empty:
             return None

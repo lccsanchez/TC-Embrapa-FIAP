@@ -1,12 +1,13 @@
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey,Integer,Boolean,Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship, declarative_base
-
+from decimal import Decimal
 Base = declarative_base()
 
 class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
     __tablename__ = 'produtos'
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    source_id: Mapped[str] = mapped_column(Integer, primary_key=True)    
     control: Mapped[str] = mapped_column(String(100), nullable=False)
     produto: Mapped[str] = mapped_column(String(200), nullable=False)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
@@ -24,7 +25,7 @@ class Registros(Base):  # Classe base para registros de ano e quantidade
     id_produto: Mapped[str] = mapped_column(ForeignKey('produtos.id', ondelete="CASCADE"), nullable=False)  # ID do produto (genérico)
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (processamento, produção, comércio)
     ano: Mapped[int] = mapped_column(nullable=False)
-    quantidade: Mapped[float] = mapped_column(nullable=False)
+    quantidade: Mapped[Decimal] = mapped_column(Numeric(precision=20, scale=0), nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'registros',  # Identificador padrão para a classe base
@@ -71,8 +72,8 @@ class RegistroImportacaoExportacao(Base):
     id_pais: Mapped[int] = mapped_column(ForeignKey('paises.id', ondelete="CASCADE"), nullable=False) 
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (importacao, exportacao)
     ano: Mapped[int] = mapped_column(nullable=False)
-    quantidade: Mapped[float] = mapped_column(nullable=False)
-    valor: Mapped[float] = mapped_column(nullable=False)
+    quantidade: Mapped[Decimal] = mapped_column(Numeric(precision=20, scale=0), nullable=False)
+    valor: Mapped[Decimal] = mapped_column(Numeric(precision=20, scale=2), nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'registros_imp_exp',  # Identificador padrão para a classe base
@@ -97,3 +98,16 @@ class RegistroExportacao(RegistroImportacaoExportacao):
     __mapper_args__ = {
         "polymorphic_identity": "exportacao",
     }
+
+class Users(Base):
+    __tablename__ = 'users'
+
+    id = mapped_column(Integer, primary_key=True, index=True)
+    email = mapped_column(String(100), unique=True)
+    username = mapped_column(String(100), unique=True)
+    first_name = mapped_column(String(100))
+    last_name = mapped_column(String(100))
+    hashed_password = mapped_column(String(100))
+    is_active = mapped_column(Boolean, default=True)
+    role = mapped_column(String(50))
+    phone_number = mapped_column(String(50))
