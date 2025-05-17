@@ -1,15 +1,16 @@
 from sqlalchemy import String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database import Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship, declarative_base
 
+Base = declarative_base()
 
 class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
     __tablename__ = 'produtos'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    produto: Mapped[str] = mapped_column(String(30), nullable=False)
-    categoria: Mapped[str] = mapped_column(String(20), nullable=False)
-    classificacao: Mapped[str] = mapped_column(String(20), nullable=False)
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    control: Mapped[str] = mapped_column(String(100), nullable=False)
+    produto: Mapped[str] = mapped_column(String(200), nullable=False)
+    categoria: Mapped[str] = mapped_column(String(100), nullable=True)
+    classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     registros: Mapped[list["Registros"]] = relationship('Registros', back_populates='produto', cascade="all, delete-orphan")
 
@@ -19,8 +20,8 @@ class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
 class Registros(Base):  # Classe base para registros de ano e quantidade
     __tablename__ = 'registros'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    id_produto: Mapped[int] = mapped_column(ForeignKey('produtos.id'), nullable=False)  # ID do produto (genérico)
+    id: Mapped[str] = mapped_column(String(50),primary_key=True)
+    id_produto: Mapped[str] = mapped_column(ForeignKey('produtos.id', ondelete="CASCADE"), nullable=False)  # ID do produto (genérico)
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (processamento, produção, comércio)
     ano: Mapped[int] = mapped_column(nullable=False)
     quantidade: Mapped[float] = mapped_column(nullable=False)
@@ -50,14 +51,49 @@ class RegistroComercio(Registros):
         'polymorphic_identity': 'comercio',
     }
 
-class User(Base): 
-    __tablename__ = 'usuarios'
+class Pais(Base):  # Classe única para Importação e Exportação
+    __tablename__ = "paises"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    nickname: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
-    senha: Mapped[str] = mapped_column(String(10), nullable=False)
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    pais: Mapped[str] = mapped_column(String(200), nullable=False)
+
+    registros_imp_exp: Mapped[list["RegistroImportacaoExportacao"]] = relationship(
+        "RegistroImportacaoExportacao", back_populates="pais", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
-        return f"<User(id={self.id}, nickname='{self.nickname}>"
+        return f"<Pais(id={self.id}, pais='{self.pais}')>"
 
+class RegistroImportacaoExportacao(Base):
+    __tablename__ = "importacao_exportacao"
 
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    id_pais: Mapped[int] = mapped_column(ForeignKey('paises.id', ondelete="CASCADE"), nullable=False) 
+    tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (importacao, exportacao)
+    ano: Mapped[int] = mapped_column(nullable=False)
+    quantidade: Mapped[float] = mapped_column(nullable=False)
+    valor: Mapped[float] = mapped_column(nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'registros_imp_exp',  # Identificador padrão para a classe base
+        'polymorphic_on': tipo_operacao,  # Coluna usada para diferenciar os tipos de operação
+    }
+
+    pais: Mapped["Pais"] = relationship("Pais", back_populates="registros_imp_exp")
+
+    def __repr__(self):
+        return (
+            f"<RegistroImportacaoExportacao(id={self.id}, id_pais='{self.id_pais}', "
+            f"tipo_operacao='{self.tipo_operacao}', ano='{self.ano}', "
+            f"quantidade='{self.quantidade}', valor='{self.valor}')>"
+        )
+
+class RegistroImportacao(RegistroImportacaoExportacao):
+    __mapper_args__ = {
+        'polymorphic_identity': 'importacao',  
+    }
+
+class RegistroExportacao(RegistroImportacaoExportacao):
+    __mapper_args__ = {
+        "polymorphic_identity": "exportacao",
+    }

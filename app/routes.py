@@ -1,84 +1,98 @@
-from flask import jsonify, Blueprint, render_template, redirect, url_for, request, session, flash
-from scraper import filtrar_dados, agrupar_dados
-import urls
-from app.models import User
+from flask import Blueprint
+from service.producao import producao_service
+from service.processamento import processamento_service
+from service.importacao import importacao_service
+from service.exportacao import exportacao_service
+from service.comercio import comercio_service
+from util import response 
 
-processamento = Blueprint('processamento', __name__)
 producao = Blueprint('producao', __name__)
-comercio = Blueprint('comercio', __name__)
-auth = Blueprint('auth', __name__)
-home = Blueprint('home', __name__)
+processamento = Blueprint('processamento', __name__)
+comercializacao = Blueprint("comercializacao", __name__)
+importacao = Blueprint("importacao", __name__)
+exportacao = Blueprint("exportacao", __name__)
 
-# Criar rotas para login e auth
-@auth.route('/login')
-def login():
-    proxima = request.args.get('proxima')
-    return render_template('login.html', proxima=proxima)
+@producao.route("/producao", defaults={'year': None}) 
+@producao.route("/producao/<year>") 
+def get_producao(year):        
+     return response.build_response(producao_service.find_all() if year is None else producao_service.find_by_year(year))
 
-@auth.route('/autenticar', methods=['POST'])
-def autenticar():
-    from app.database import SessionLocal  # Importa a sessão do banco de dados
-    db_session = SessionLocal()
-    
-    try:
-        usuario = db_session.query(User).filter_by(nickname=request.form['user']).first()
 
-        if usuario:
-            if request.form['password'] == usuario.senha:
-                session['usuario_logado'] = usuario.nickname
-                proxima_pagina = request.form.get('proxima', url_for('home.index'))
-                return redirect(proxima_pagina)
-            else:
-                flash('Senha incorreta!')
-                return redirect('/login')
-        
-        else:
-            flash('Usuário não encontrado!')
-            return redirect(url_for('auth.login'))
-    finally:
-        db_session.close()
+@producao.route("/producao", defaults={'year': None} ,methods=['POST'])
+def save_all(year):        
+     producao_service.save_all()
+     return "OK"
 
-@auth.route('/logout', methods=['POST'])
-def logout():
-    session.pop('usuario_logado', None)
-    return redirect(url_for('home.index'))
-            
-@home.route("/")
-def index():
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('auth.login', proxima=url_for('home.index')))
-    usuario_logado = session.get('usuario_logado')
-    return render_template("index.html", usuario_logado=usuario_logado)
+@processamento.route("/processamento") 
+def get_processamento_all():  
+     return response.build_response(processamento_service.find_all())  
 
-@processamento.route("/processamento", defaults={'classificacao': None, 'ano': None, 'categoria': None})
-@processamento.route("/processamento/<classificacao>", defaults={'ano': None, 'categoria': None})
-@processamento.route("/processamento/<classificacao>/<ano>", defaults={'categoria': None})
-@processamento.route("/processamento/<classificacao>/<ano>/<categoria>")
-def get_processamento(classificacao, ano, categoria):
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('auth.login', proxima=url_for('processamento.get_processamento')))
-    df = agrupar_dados(urls.urls_processamento)
-    resultado = filtrar_dados(df, classificacao, ano, categoria)
-    return jsonify(resultado)
+@processamento.route("/processamento/<year>", defaults={'classification':None}) 
+@processamento.route("/processamento/<year>/<classification>", defaults={'classification':'ProcessaViniferas'}) 
+def get_processamento(year,classification):        
+     return response.build_response(processamento_service.find_by_year(year,classification))
 
-@producao.route("/producao", defaults={'classificacao': None, 'ano': None, 'categoria': None})
-@producao.route("/producao/<classificacao>", defaults={'ano': None, 'categoria': None})
-@producao.route("/producao/<classificacao>/<ano>", defaults={'categoria': None})
-@producao.route("/producao/<classificacao>/<ano>/<categoria>")
-def get_producao(classificacao, ano, categoria):
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('auth.login', proxima=url_for('producao.get_producao')))
-    df = agrupar_dados(urls.url_producao)
-    resultado = filtrar_dados(df, classificacao, ano, categoria)
-    return jsonify(resultado)
 
-@comercio.route("/comercio", defaults={'classificacao': None, 'ano': None, 'categoria': None})
-@comercio.route("/comercio/<classificacao>", defaults={'ano': None, 'categoria': None})
-@comercio.route("/comercio/<classificacao>/<ano>", defaults={'categoria': None})
-@comercio.route("/comercio/<classificacao>/<ano>/<categoria>")
-def get_comercio(classificacao, ano, categoria):
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('auth.login', proxima=url_for('comercio.get_comercio')))
-    df = agrupar_dados(urls.url_comercializacao)
-    resultado = filtrar_dados(df, classificacao, ano, categoria)
-    return jsonify(resultado)
+@producao.route("/processamento",methods=['POST'])
+def processamento_save_all():        
+    processamento_service.save_all()
+    return "OK"
+
+
+@comercializacao.route("/comercializacao", defaults={"year": None})
+@comercializacao.route("/comercializacao/<year>")
+def get_comercializacao(year):
+    return response.build_response(
+        comercio_service.find_all()
+        if year is None
+        else comercio_service.find_by_year(year)
+    )
+
+@comercializacao.route("/comercializacao", defaults={"year": None}, methods=["POST"])
+def save_all(year):
+    comercio_service.save_all()
+    return "OK"
+
+
+@importacao.route("/importacao")
+def get_importacao_all():
+    return response.build_response(importacao_service.find_all())
+
+
+@importacao.route("/importacao/<year>", defaults={"classification": None})
+@importacao.route(
+    "/importacao/<year>/<classification>",
+    defaults={"classification": "ImpVinhos"},
+)
+def get_importacao(year, classification):
+    return response.build_response(
+        importacao_service.find_by_year(year, classification)
+    )
+
+
+@producao.route("/importacao", methods=["POST"])
+def importacao_save_all():
+    importacao_service.save_all()
+    return "OK"
+
+
+@exportacao.route("/exportacao")
+def get_exportacao_all():
+    return response.build_response(exportacao_service.find_all())
+
+
+@exportacao.route("/exportacao/<year>", defaults={"classification": None})
+@exportacao.route(
+    "/exportacao/<year>/<classification>",
+    defaults={"classification": "ExpVinho"},
+)
+def get_exportacao(year, classification):
+    return response.build_response(
+        exportacao_service.find_by_year(year, classification)
+    )
+
+
+@producao.route("/exportacao", methods=["POST"])
+def exportacao_save_all():
+    exportacao_service.save_all()
+    return "OK"

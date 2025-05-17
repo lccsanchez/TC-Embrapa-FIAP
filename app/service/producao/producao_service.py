@@ -1,0 +1,27 @@
+from repository.producao import producao_embrapa_repository, producao_db_repository
+
+def find_all():
+
+    result = producao_embrapa_repository.find_all()
+    if result is None:
+        result = producao_db_repository.find_all() 
+        print("(find_all) Obtendo o dado do database")    
+    else:    
+        print("(find_all) Obtendo o dado da embrapa")
+    
+    return result
+
+def find_by_year(year):
+    
+    result = producao_embrapa_repository.find_by_year(year)
+    if result is None:
+        result = producao_db_repository.find_by_year(year)
+        print("(find_by_year) Obtendo o dado do database")   
+    else:
+         print("(find_by_year) Obtendo o dado da embrapa")
+
+    return result
+
+def save_all():
+    producao_db_repository.add_all(producao_embrapa_repository.find_all())
+    
