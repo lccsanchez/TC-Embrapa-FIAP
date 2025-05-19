@@ -1,4 +1,4 @@
-from typing import Callable, TypeVar,Tuple,List
+from typing import TypeVar,Tuple,List
 import pandas as pd 
 from  app.util import csv
 
@@ -32,7 +32,7 @@ def __load(url: str, key: str) -> pd.DataFrame:
             print(f"Erro ao carregar o arquivo local: {e}")
             return None
 
-def execute(urls_dict: dict, converter: Callable[[List[Tuple[str,pd.DataFrame]]], List[T]]) -> List[T]:  
+def execute(urls_dict: dict) -> List[Tuple[str,pd.DataFrame]]:  
 
     dataframes : List[Tuple[str,pd.DataFrame]] = []
 
@@ -53,4 +53,4 @@ def execute(urls_dict: dict, converter: Callable[[List[Tuple[str,pd.DataFrame]]]
             return None
 
 
-    return converter(dataframes)
+    return dataframes

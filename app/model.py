@@ -8,8 +8,8 @@ class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     source_id: Mapped[str] = mapped_column(Integer, primary_key=True)    
-    control: Mapped[str] = mapped_column(String(100), nullable=False)
-    produto: Mapped[str] = mapped_column(String(200), nullable=False)
+    control: Mapped[str] = mapped_column(String(100), nullable=True)
+    produto: Mapped[str] = mapped_column(String(200), nullable=True)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
     classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
@@ -39,18 +39,24 @@ class Registros(Base):  # Classe base para registros de ano e quantidade
 
 class RegistroProcessamento(Registros):
     __mapper_args__ = {
-        'polymorphic_identity': 'processamentos',  
+        'polymorphic_identity': 'processamento',  
     }
+    def __init__(self, tipo_operacao: str = 'processamento', **kwargs):
+        super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 class RegistroProducao(Registros):
     __mapper_args__ = {
         'polymorphic_identity': 'producao', 
     }
+    def __init__(self, tipo_operacao: str = 'producao', **kwargs):
+        super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 class RegistroComercio(Registros):
     __mapper_args__ = {
         'polymorphic_identity': 'comercio',
     }
+    def __init__(self, tipo_operacao: str = 'comercio', **kwargs):
+        super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 class Pais(Base):  # Classe única para Importação e Exportação
     __tablename__ = "paises"
@@ -93,11 +99,15 @@ class RegistroImportacao(RegistroImportacaoExportacao):
     __mapper_args__ = {
         'polymorphic_identity': 'importacao',  
     }
-
+    def __init__(self, tipo_operacao: str = 'importacao', **kwargs):
+        super().__init__(tipo_operacao=tipo_operacao, **kwargs)  
+        
 class RegistroExportacao(RegistroImportacaoExportacao):
     __mapper_args__ = {
         "polymorphic_identity": "exportacao",
     }
+    def __init__(self, tipo_operacao: str = 'exportacao', **kwargs):
+        super().__init__(tipo_operacao=tipo_operacao, **kwargs)    
 
 class Users(Base):
     __tablename__ = 'users'

@@ -1,5 +1,5 @@
 from dto.registro_total import RegistroTotalDTO
-from app.model.entidades import Produto
+from app.model import Produto
 
 from typing import List,Dict,Set
 
@@ -24,11 +24,11 @@ def model_to_dto(items: List[Produto]) -> Dict[str, RegistroTotalDTO]:
             pai_atual = item
             qt_total = item.registros[0].quantidade
             categorias[pai_atual.control] = RegistroTotalDTO(                
-                total= "-" if qt_total==0 else f"{qt_total:,}",
+                total= "-" if qt_total==0 else f"{qt_total:,}".replace(",",'.'),
                 subitems=[]
             )
         elif pai_atual:
             qt_item=item.registros[0].quantidade   
-            categorias[pai_atual.control].subitems.append({ item.produto : "-" if qt_item==0 else f"{qt_item:,}"  })
+            categorias[pai_atual.control].subitems.append({ item.produto : "-" if qt_item==0 else f"{qt_item:,}".replace(",",'.')  })
             
     return categorias 

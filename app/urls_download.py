@@ -16,16 +16,14 @@ url_producao = {
   for item in itens_producao
 
 }
-separador_producao = ";"
 
 urls_processamento = {
   item: f'{url_base}/{item}.csv'  
   for item in itens_processamento
 }
-separador_processamento = ""
 
 url_comercializacao = {
-  item: f'{url_base}/index.php?opcao=opt_04'
+  item: f'{url_base}/{item}.csv'  
   for item in itens_comercializacao
 }
 
@@ -36,14 +34,8 @@ urls_importacao = {
   for i, item in zip(range(1,6), itens_importacao)
 }
 
-separador_importacao = ""
-
 urls_exportacao = {
   item: f'{url_base}/index.php?subopcao=subopt_0{i}&opcao=opt_06'
   for i, item in zip(range(1,5), itens_exportacao)
 }
 
-separador_exportacao = ""
-
-def get_url_scrapping(ano: str, cod_opcao: str, cod_subopcao: str = None):
-    return f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}" if cod_subopcao is None else f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}&subopcao={cod_subopcao}"

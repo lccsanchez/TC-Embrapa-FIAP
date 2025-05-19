@@ -3,7 +3,7 @@ from os import getenv
 from app.database import SessionLocal
 from passlib.context import CryptContext
 from fastapi.security import  OAuth2PasswordBearer
-from model.entidades import Users
+from app.model import Users
 from dto.user import UserDTO
 
 load_dotenv()
