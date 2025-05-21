@@ -58,24 +58,28 @@ class RegistroComercio(Registros):
     def __init__(self, tipo_operacao: str = 'comercio', **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
-class Pais(Base):  # Classe única para Importação e Exportação
-    __tablename__ = "paises"
+class ImportacaoExportacao(Base):  # Classe única para Importação e Exportação
+    __tablename__ = "importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    source_id: Mapped[str] = mapped_column(Integer, primary_key=True)
     pais: Mapped[str] = mapped_column(String(200), nullable=False)
+    classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     registros_imp_exp: Mapped[list["RegistroImportacaoExportacao"]] = relationship(
         "RegistroImportacaoExportacao", back_populates="pais", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
-        return f"<Pais(id={self.id}, pais='{self.pais}')>"
+        return f"<ImportacaoExportacao(id={self.id}, pais='{self.pais}', classificacao='{self.classificacao}')>"
 
 class RegistroImportacaoExportacao(Base):
-    __tablename__ = "importacao_exportacao"
+    __tablename__ = "registros_importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
-    id_pais: Mapped[int] = mapped_column(ForeignKey('paises.id', ondelete="CASCADE"), nullable=False) 
+    id_pais: Mapped[int] = mapped_column(
+        ForeignKey("importacao_exportacao.id", ondelete="CASCADE"), nullable=False
+    )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (importacao, exportacao)
     ano: Mapped[int] = mapped_column(nullable=False)
     quantidade: Mapped[Decimal] = mapped_column(Numeric(precision=20, scale=0), nullable=False)
@@ -86,7 +90,9 @@ class RegistroImportacaoExportacao(Base):
         'polymorphic_on': tipo_operacao,  # Coluna usada para diferenciar os tipos de operação
     }
 
-    pais: Mapped["Pais"] = relationship("Pais", back_populates="registros_imp_exp")
+    pais: Mapped["ImportacaoExportacao"] = relationship(
+        "ImportacaoExportacao", back_populates="registros_imp_exp"
+    )
 
     def __repr__(self):
         return (
@@ -101,7 +107,7 @@ class RegistroImportacao(RegistroImportacaoExportacao):
     }
     def __init__(self, tipo_operacao: str = 'importacao', **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)  
-        
+
 class RegistroExportacao(RegistroImportacaoExportacao):
     __mapper_args__ = {
         "polymorphic_identity": "exportacao",

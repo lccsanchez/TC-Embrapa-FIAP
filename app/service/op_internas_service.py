@@ -6,7 +6,7 @@ import app.model as model
 
 def find(year, opcao,subopcao=None):  
 
-    subopcao = opcao if not subopcao else subopcao
+    # subopcao = opcao if not subopcao else subopcao
 
     result = scapper_repository.find_with_subitems(year,opcao,subopcao)
 
