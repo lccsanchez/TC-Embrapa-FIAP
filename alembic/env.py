@@ -1,10 +1,14 @@
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 from alembic import context
-from app.config import SQLALCHEMY_DATABASE_URI
 from app.model import Base
+import os
+from dotenv import load_dotenv
 
+
+# Carrega variáveis do .env
+load_dotenv()
+SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -25,8 +29,6 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URI)
-
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -40,7 +42,7 @@ def run_migrations_offline() -> None:
 
     """
 
-    url = config.get_main_option("sqlalchemy.url")
+    url = SQLALCHEMY_DATABASE_URI
     
     context.configure(
         url=url,
@@ -64,6 +66,7 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        url=SQLALCHEMY_DATABASE_URI,  # Passa a URL diretamente aqui
     )
 
     with connectable.connect() as connection:
