@@ -2,12 +2,12 @@ from app.model import Produto,Registros
 from sqlalchemy.orm import joinedload,with_loader_criteria
 from app.database import SessionLocal  
 from typing import List 
-from util import converter
+from app.util import converter
 session =SessionLocal()  
 
 def find(year:int ,tipo_registro: type, opcao:str ,subopcao:str =None):
     opcao = str.lower(opcao)
-    subopcao = str.lower(subopcao)
+    subopcao = None if not subopcao else str.lower(subopcao)
     subquery_ids = (
         session.query(Produto.id)
         .join(Produto.registros)       

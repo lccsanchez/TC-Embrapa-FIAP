@@ -1,7 +1,7 @@
-from util.scrapping.strategy_just_item import JustItems
-from util.scrapping.strategy_with_subitems import WithSubItems
+from app.util.scrapping.strategy_just_item import JustItems
+from app.util.scrapping.strategy_with_subitems import WithSubItems
 import app.urls_scrapping as urls
-from util import reader
+from app.util import reader
 
 
 def find_with_subitems(year: str,opcao, subopcao=None):

@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import os
 from io import StringIO
-from util import reader
+from app.util import reader
 
 
 def read(url, timeout): 

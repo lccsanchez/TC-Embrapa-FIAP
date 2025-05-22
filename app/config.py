@@ -6,12 +6,16 @@ from urllib.parse import quote_plus
 load_dotenv()
 
 # Configuração da URL do banco de dados
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD","dinnamus"))
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT","3306")
+DB_USER = os.getenv("DB_USER", "azureuser")
+DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD", "your_password_here"))
+DB_HOST = os.getenv("DB_HOST", "tcembrapadb.database.windows.net")
+DB_PORT = os.getenv("DB_PORT", "1433")
 DB_NAME = os.getenv("DB_NAME", "tcembrapadb")
 
-SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# String de conexão para Azure SQL com pyodbc
+SQLALCHEMY_DATABASE_URI = (
+    f"mssql+pyodbc://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    "?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=yes&TrustServerCertificate=no&Connection+Timeout=30"
+)
 
 SECRET_KEY = os.getenv("SECRET_KEY")

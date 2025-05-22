@@ -2,7 +2,7 @@ from app.model import ImportacaoExportacao, RegistroImportacaoExportacao
 from sqlalchemy.orm import joinedload, with_loader_criteria
 from app.database import SessionLocal
 from typing import List
-from util import converter
+from app.util import converter
 
 session = SessionLocal()
 
@@ -45,6 +45,7 @@ def add_all(nome_registro: str, items: List[ImportacaoExportacao]):
     try:
         remove_all(nome_registro)
         session.add_all(items)
+        print(items)
         session.commit()
     except Exception as e:
         print(f"Erro no método add_all: {e}")

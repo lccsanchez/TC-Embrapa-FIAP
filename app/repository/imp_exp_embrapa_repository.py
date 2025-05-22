@@ -2,8 +2,6 @@ import uuid
 from typing import List, Tuple
 import pandas as pd
 from unidecode import unidecode
-
-
 from app.util import etl
 from app.model import ImportacaoExportacao
 

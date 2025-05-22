@@ -6,11 +6,11 @@ from starlette import status
 from app.dto.user import UserDTO
 from app.dto.token import TokenDTO
 from fastapi.security import OAuth2PasswordRequestForm
-from service import auth_service 
+from app.service import auth_service 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/create-user", status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserDTO):  
     auth_service.create_user(user)      
 

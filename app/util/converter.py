@@ -1,4 +1,4 @@
-from dto.registro_total import RegistroTotalDTO
+from app.dto.registro_total import RegistroTotalDTO
 from app.model import Produto
 
 from typing import List,Dict,Set

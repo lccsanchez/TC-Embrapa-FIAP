@@ -1,10 +1,12 @@
 from dotenv import load_dotenv
 from os import getenv
+from fastapi import HTTPException
 from app.database import SessionLocal
 from passlib.context import CryptContext
 from fastapi.security import  OAuth2PasswordBearer
 from app.model import Users
-from dto.user import UserDTO
+from app.dto.user import UserDTO
+from sqlalchemy.exc import IntegrityError
 
 load_dotenv()
 
@@ -25,16 +27,29 @@ def authenticate_user(username: str, password: str):
     return user
 
 def create_user(user: UserDTO):
-    create_user_model = Users(
-        email=user.email,
-        username=user.username,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        role=user.role,
-        hashed_password=bcrypt_context.hash(user.password),
-        is_active=True,
-        phone_number=user.phone_number,
-    )
-
-    session.add(create_user_model)
-    session.commit()
+    try:
+        create_user_model = Users(
+            email=user.email,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            role=user.role,
+            hashed_password=bcrypt_context.hash(user.password),
+            is_active=True,
+            phone_number=user.phone_number,
+        )
+        session.add(create_user_model)
+        session.commit()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Usuário já existe."
+        )
+    except Exception as e:
+        print(f"Erro no método create_user: {e}")
+        session.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Não foi possível criar o usuário. Verifique os dados e tente novamente.{str.replace(str (e), create_user_model.hashed_password, "********")}"
+        )

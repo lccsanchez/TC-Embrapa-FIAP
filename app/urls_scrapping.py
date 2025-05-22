@@ -1,5 +1,5 @@
 def get_url_scrapping(ano: str, cod_opcao: str, cod_subopcao: str = None):
-    return f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}" if cod_subopcao is None else f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}&subopcao={cod_subopcao}"
+    return f"http://xptovitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}" if cod_subopcao is None else f"http://xptovitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}&subopcao={cod_subopcao}"
 
 sessions = {
     "producao": {"item": "opt_02"},

@@ -11,7 +11,7 @@ from passlib.context import CryptContext
 from fastapi.security import  OAuth2PasswordBearer
 from jose import jwt
 
-from repository import user_repository
+from app.repository import user_repository
  
 load_dotenv()
 SECRET_KEY = getenv("SECRET_KEY") 
