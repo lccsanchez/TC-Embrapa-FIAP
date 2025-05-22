@@ -7,7 +7,7 @@ class Produto(Base):  # Classe única para Processamentos, Producao e Comercio
     __tablename__ = 'produtos'
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
-    source_id: Mapped[str] = mapped_column(Integer, primary_key=True)    
+    source_id: Mapped[int] = mapped_column(Integer, nullable=True)  # Remova primary_key=True
     control: Mapped[str] = mapped_column(String(100), nullable=True)
     produto: Mapped[str] = mapped_column(String(200), nullable=True)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
@@ -62,7 +62,7 @@ class ImportacaoExportacao(Base):  # Classe única para Importação e Exportaç
     __tablename__ = "importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
-    source_id: Mapped[str] = mapped_column(Integer, primary_key=True)
+    source_id: Mapped[int] = mapped_column(Integer, nullable=True)  # Remova primary_key=True
     pais: Mapped[str] = mapped_column(String(200), nullable=False)
     classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
