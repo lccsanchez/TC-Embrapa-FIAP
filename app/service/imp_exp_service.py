@@ -6,7 +6,9 @@ import app.model as model
 
 
 def find(year, opcao, subopcao=None):
-
+    """
+    Busca os dados via scrapper ou via banco de dados.
+    """
     subopcao = opcao if not subopcao else subopcao
 
     result = scapper_repository.find_with_justitems(year, opcao, subopcao)
@@ -25,6 +27,9 @@ def find(year, opcao, subopcao=None):
 
 
 def save_all(tipo_operacao):
+    """
+    Salva todos os dados no banco de dados.
+    """
     tipo_registro = __get_tipo_registro(tipo_operacao)
     url = __get_tipo_url(tipo_operacao)
 
@@ -37,6 +42,9 @@ def save_all(tipo_operacao):
 
 
 def __get_tipo_registro(tipo_operacao: str):
+    """
+    Retorna o tipo de registro de acordo com a operação.
+    """
     if tipo_operacao == "importacao":
         return model.RegistroImportacao
     else:
@@ -44,6 +52,9 @@ def __get_tipo_registro(tipo_operacao: str):
 
 
 def __get_tipo_url(tipo_operacao: str):
+    """
+    Retorna a URL de acordo com a operação.
+    """
     if tipo_operacao == "importacao":
         return urls_importacao
     else:

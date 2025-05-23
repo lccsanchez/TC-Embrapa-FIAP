@@ -5,9 +5,9 @@ from app.urls_download import url_producao, url_comercializacao, urls_processame
 import app.model as model
 
 def find(year, opcao,subopcao=None):  
-
-    # subopcao = opcao if not subopcao else subopcao
-
+    """
+    Busca os dados via scrapper ou via banco de dados.
+    """
     result = scapper_repository.find_with_subitems(year,opcao,subopcao)
 
     if result is None:
@@ -21,14 +21,20 @@ def find(year, opcao,subopcao=None):
     return result
 
 def save_all(tipo_operacao):
-   tipo_registro = __get_tipo_registro(tipo_operacao)
-   url= __get_tipo_url(tipo_operacao)
+    """
+    Salva todos os dados no banco de dados.
+    """
+    tipo_registro = __get_tipo_registro(tipo_operacao)
+    url= __get_tipo_url(tipo_operacao)
    
-   op_internas_db_repository.add_all(tipo_operacao,op_internas_embrapa_repository.find_all(tipo_registro,tipo_operacao,url))
+    op_internas_db_repository.add_all(tipo_operacao,op_internas_embrapa_repository.find_all(tipo_registro,tipo_operacao,url))
    
-   return None
+    return None
 
-def __get_tipo_registro(tipo_operacao: str):     
+def __get_tipo_registro(tipo_operacao: str):  
+    """
+    Retorna o tipo de registro de acordo com a operação.
+    """   
     if tipo_operacao=="producao":
         return model.RegistroProducao
         
@@ -38,6 +44,9 @@ def __get_tipo_registro(tipo_operacao: str):
         return model.RegistroProcessamento
     
 def __get_tipo_url(tipo_operacao: str):
+    """
+    Retorna a URL de acordo com a operação.
+    """
     if tipo_operacao=="producao":
         return url_producao
         

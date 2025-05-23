@@ -3,14 +3,11 @@ from os import getenv
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
- 
 from starlette import status
- 
 from app.dto.user import UserDTO
 from passlib.context import CryptContext
 from fastapi.security import  OAuth2PasswordBearer
 from jose import jwt
-
 from app.repository import user_repository
  
 load_dotenv()
@@ -19,12 +16,13 @@ ALGORITHM = getenv("ALGORITHM")
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-
 def authenticate_user(username: str, password: str):
+    """
+    Autentica o usuário e gera um token JWT.
+    """
     user = user_repository.authenticate_user(username,password)
 
     if not user:
@@ -39,9 +37,10 @@ def authenticate_user(username: str, password: str):
     return {"access_token": token, "token_type": "bearer"}
 
 
-def create_access_token(
-    username: str, user_id: int, role: str, expires_delta: timedelta
-):
+def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta):
+    """
+    Cria um token JWT com informações do usuário.
+    """
     encode = {"sub": username, "id": user_id, "role": role}
     expires = datetime.now(timezone.utc) + expires_delta
     encode.update({"exp": expires})
@@ -49,6 +48,9 @@ def create_access_token(
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
+    """
+    Obtém o usuário atual a partir do token JWT.
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -66,4 +68,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         )
 
 def create_user(user: UserDTO):
+    """
+    Cria um novo usuário no banco de dados.
+    """
     user_repository.create_user(user)

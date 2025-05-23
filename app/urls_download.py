@@ -1,5 +1,3 @@
-# Construir todas urls da página
-
 # Chaves para formação das páginas com diferentes detalhamentos
 itens_processamento = ['ProcessaViniferas','ProcessaAmericanas', 'ProcessaMesa', 'ProcessaSemclass']
 itens_importacao = ['ImpVinhos', 'ImpEspumantes', 'ImpFrescas', 'ImpPassas', 'ImpSuco']

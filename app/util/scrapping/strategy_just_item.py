@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 
-
 class JustItems():
     """Estratégia para o scraping do tipo 2."""
 
