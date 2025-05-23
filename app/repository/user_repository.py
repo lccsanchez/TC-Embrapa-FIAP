@@ -35,13 +35,14 @@ def create_user(user: UserDTO):
         session.rollback()
         raise HTTPException(
             status_code=409,
-            detail="Usuário já existe."
+            detail="Usuário ou e-mail já existente."
         )
     except Exception as e:
         print(f"Erro no método create_user: {e}")
+        mensagem_erro = str(e).replace(create_user_model.hashed_password, "********"),
         raise HTTPException(
             status_code=500,
-            detail=f"Não foi possível criar o usuário. Verifique os dados e tente novamente. {str.replace(str (e), create_user_model.hashed_password, "********")}"
+            detail = f"Não foi possível criar o usuário. Verifique os dados e tente novamente. {mensagem_erro}"
         )
 
 def authenticate_user(username: str, password: str):

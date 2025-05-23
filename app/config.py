@@ -17,6 +17,5 @@ SQLALCHEMY_DATABASE_URI = (
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
     f"?ssl_ca={SSL_CA}"
 )
-print(SQLALCHEMY_DATABASE_URI)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
