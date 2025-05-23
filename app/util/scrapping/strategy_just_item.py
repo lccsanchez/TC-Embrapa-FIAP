@@ -1,8 +1,6 @@
-from app.util.scrapping.scraping_strategy import ScrapingStrategy
 from bs4 import BeautifulSoup
 
-
-class JustItems(ScrapingStrategy):
+class JustItems():
     """Estratégia para o scraping do tipo 2."""
 
     def scrape(self, html_content: str):

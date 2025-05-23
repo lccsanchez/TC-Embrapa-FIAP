@@ -1,3 +1,4 @@
+#URLS para scraping de dados direto do site da Embrapa
 def get_url_scrapping(ano: str, cod_opcao: str, cod_subopcao: str = None):
     return f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}" if cod_subopcao is None else f"http://vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}&subopcao={cod_subopcao}"
 

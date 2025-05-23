@@ -1,8 +1,6 @@
 import uuid
 from typing import List,Tuple
 import pandas as pd
-
-
 from app.util import etl
 from app.model import Produto 
 

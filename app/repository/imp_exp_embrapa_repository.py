@@ -2,11 +2,8 @@ import uuid
 from typing import List, Tuple
 import pandas as pd
 from unidecode import unidecode
-
-
 from app.util import etl
 from app.model import ImportacaoExportacao
-
 
 def find_all(
     tipo_registro: type, tipo_operacao: str, url: str
@@ -18,7 +15,6 @@ def find_all(
     except Exception as e:
         print(f"[Erro] método find_all: {e}")
         return None
-
 
 def __converter(
     tipo_registro: type, tipo_operacao: str, dataframes: List[Tuple[str, pd.DataFrame]]

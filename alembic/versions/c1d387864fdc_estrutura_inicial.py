@@ -1,8 +1,8 @@
-"""atualização inicial
+"""estrutura inicial
 
-Revision ID: cdc8bc4717dc
+Revision ID: c1d387864fdc
 Revises: 
-Create Date: 2025-05-21 22:13:36.178730
+Create Date: 2025-05-22 18:20:59.368616
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'cdc8bc4717dc'
+revision: str = 'c1d387864fdc'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
