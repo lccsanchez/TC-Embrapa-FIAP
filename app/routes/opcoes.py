@@ -6,7 +6,7 @@ import app.service.imp_exp_service as imp_exp_service
 
 router = APIRouter()  
 
-@router.get("/")
+@router.get("/info")
 async def root():
     return {"message": "API em execução"}
 

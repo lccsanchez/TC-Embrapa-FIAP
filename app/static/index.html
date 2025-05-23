@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>App Embrapa - JWT + API</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 8px; }
+    button { margin-top: 10px; }
+    pre { background: #f0f0f0; padding: 10px; max-height: 300px; overflow: auto; }
+  </style>
+</head>
+<body>
+
+  <h1>Cadastro de Usuário</h1>
+  <form id="createUserForm">
+    <label>Usuário: <input type="text" id="createUsername" required /></label>
+    <label>Senha: <input type="password" id="createPassword" required /></label>
+    <button type="submit">Criar Usuário</button>
+  </form>
+  <div id="createUserMessage"></div>
+
+  <hr/>
+
+  <h1>Login</h1>
+  <form id="loginForm">
+    <label>Usuário: <input type="text" id="loginUsername" required /></label>
+    <label>Senha: <input type="password" id="loginPassword" required /></label>
+    <button type="submit">Entrar</button>
+  </form>
+  <div id="loginMessage"></div>
+
+  <hr/>
+
+  <h2>Consulta Dados Embrapa</h2>
+  <label>Ano: <input type="text" id="year" value="2023" /></label>
+
+  <h3>Produção</h3>
+  <button id="btnProducao" disabled>Buscar Produção</button>
+
+  <h3>Processamento</h3>
+  <label>Subopção:
+    <select id="processamentoSubopcao" disabled>
+      <option value="ProcessaViniferas">ProcessaViniferas</option>
+      <option value="ProcessaAmericanas">ProcessaAmericanas</option>
+      <option value="ProcessaMesa">ProcessaMesa</option>
+      <option value="ProcessaSemclass">ProcessaSemclass</option>
+    </select>
+  </label>
+  <button id="btnProcessamento" disabled>Buscar Processamento</button>
+
+  <h3>Comercialização</h3>
+  <button id="btnComercializacao" disabled>Buscar Comercialização</button>
+
+  <h3>Importação</h3>
+  <label>Subopção:
+    <select id="importacaoSubopcao" disabled>
+      <option value="ImpVinhos">ImpVinhos</option>
+      <option value="ImpEspumantes">ImpEspumantes</option>
+      <option value="ImpFrescas">ImpFrescas</option>
+      <option value="ImpPassas">ImpPassas</option>
+      <option value="ImpSuco">ImpSuco</option>
+    </select>
+  </label>
+  <button id="btnImportacao" disabled>Buscar Importação</button>
+
+  <h3>Exportação</h3>
+  <label>Subopção:
+    <select id="exportacaoSubopcao" disabled>
+      <option value="ExpVinho">ExpVinho</option>
+      <option value="ExpEspumantes">ExpEspumantes</option>
+      <option value="ExpUva">ExpUva</option>
+      <option value="ExpSuco">ExpSuco</option>
+    </select>
+  </label>
+  <button id="btnExportacao" disabled>Buscar Exportação</button>
+
+  <hr/>
+  <h3>Resultado da Consulta</h3>
+  <pre id="result"></pre>
+
+  <script>
+    const createUserForm = document.getElementById("createUserForm");
+    const createUserMessage = document.getElementById("createUserMessage");
+
+    const loginForm = document.getElementById("loginForm");
+    const loginMessage = document.getElementById("loginMessage");
+
+    const btnProducao = document.getElementById("btnProducao");
+    const btnProcessamento = document.getElementById("btnProcessamento");
+    const btnComercializacao = document.getElementById("btnComercializacao");
+    const btnImportacao = document.getElementById("btnImportacao");
+    const btnExportacao = document.getElementById("btnExportacao");
+
+    const processamentoSubopcao = document.getElementById("processamentoSubopcao");
+    const importacaoSubopcao = document.getElementById("importacaoSubopcao");
+    const exportacaoSubopcao = document.getElementById("exportacaoSubopcao");
+
+    const yearInput = document.getElementById("year");
+    const resultPre = document.getElementById("result");
+
+    let token = null;
+
+    createUserForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById("createUsername").value,
+        password: document.getElementById("createPassword").value,
+      };
+      try {
+        const res = await fetch("/auth/create-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const msg = await res.json();
+        createUserMessage.textContent = res.ok ? "Usuário criado!" : "Erro: " + (msg.detail || res.status);
+      } catch (error) {
+        createUserMessage.textContent = "Erro: " + error.message;
+      }
+    });
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new URLSearchParams();
+      form.append("username", document.getElementById("loginUsername").value);
+      form.append("password", document.getElementById("loginPassword").value);
+      try {
+        const res = await fetch("/auth/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: form,
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || res.status);
+        token = data.access_token;
+        loginMessage.textContent = "Logado com sucesso!";
+        [btnProducao, btnProcessamento, btnComercializacao, btnImportacao, btnExportacao,
+         processamentoSubopcao, importacaoSubopcao, exportacaoSubopcao].forEach(el => el.disabled = false);
+      } catch (error) {
+        loginMessage.textContent = "Erro: " + error.message;
+      }
+    });
+
+    async function consultarRota(url) {
+      try {
+        const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+        const data = await res.json();
+        resultPre.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        resultPre.textContent = "Erro: " + error.message;
+      }
+    }
+
+    btnProducao.addEventListener("click", () => {
+      const year = yearInput.value.trim();
+      consultarRota(`/producao?year=${encodeURIComponent(year)}`);
+    });
+
+    btnProcessamento.addEventListener("click", () => {
+      const year = yearInput.value.trim();
+      const sub = processamentoSubopcao.value;
+      consultarRota(`/processamento?year=${encodeURIComponent(year)}&subopcao=${encodeURIComponent(sub)}`);
+    });
+
+    btnComercializacao.addEventListener("click", () => {
+      const year = yearInput.value.trim();
+      consultarRota(`/comercializacao?year=${encodeURIComponent(year)}`);
+    });
+
+    btnImportacao.addEventListener("click", () => {
+      const year = yearInput.value.trim();
+      const sub = importacaoSubopcao.value;
+      consultarRota(`/importacao?year=${encodeURIComponent(year)}&subopcao=${encodeURIComponent(sub)}`);
+    });
+
+    btnExportacao.addEventListener("click", () => {
+      const year = yearInput.value.trim();
+      const sub = exportacaoSubopcao.value;
+      consultarRota(`/exportacao?year=${encodeURIComponent(year)}&subopcao=${encodeURIComponent(sub)}`);
+    });
+  </script>
+</body>
+</html>
