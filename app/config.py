@@ -10,7 +10,7 @@ DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
 DB_HOST = os.getenv("DB_HOST", "tcembrapadb.mysql.database.azure.com")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "tcembrapadb")
-SSL_CA = os.getenv("SSL_CA", "certs/DigiCertGlobalRootCA.crt.pem")  # Caminho padrão
+SSL_CA = os.getenv("SSL_CA", "certs/DigiCertGlobalRootCA.crt.pem")
 
 # String de conexão para Azure MySQL com pymysql
 SQLALCHEMY_DATABASE_URI = (

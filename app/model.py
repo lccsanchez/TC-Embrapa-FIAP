@@ -77,7 +77,7 @@ class RegistroImportacaoExportacao(Base):
     __tablename__ = "registros_importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
-    id_pais: Mapped[int] = mapped_column(
+    id_pais: Mapped[str] = mapped_column(
         ForeignKey("importacao_exportacao.id", ondelete="CASCADE"), nullable=False
     )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)  # Tipo do operação (importacao, exportacao)
