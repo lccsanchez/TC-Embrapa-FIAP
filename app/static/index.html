@@ -16,6 +16,11 @@
   <form id="createUserForm">
     <label>Usuário: <input type="text" id="createUsername" required /></label>
     <label>Senha: <input type="password" id="createPassword" required /></label>
+    <label>Email: <input type="email" id="createEmail" required /></label>
+    <label>Nome: <input type="text" id="createFirstName" /></label>
+    <label>Sobrenome: <input type="text" id="createLastName" /></label>
+    <label>Telefone: <input type="text" id="createPhone"  /></label>
+    <label>Função (Role): <input type="text" id="createRole" value="user" /></label>
     <button type="submit">Criar Usuário</button>
   </form>
   <div id="createUserMessage"></div>
@@ -106,6 +111,11 @@
       const payload = {
         username: document.getElementById("createUsername").value,
         password: document.getElementById("createPassword").value,
+        email: document.getElementById("createEmail").value,
+        first_name: document.getElementById("createFirstName").value,
+        last_name: document.getElementById("createLastName").value,
+        phone_number: document.getElementById("createPhone").value,
+        role: document.getElementById("createRole").value
       };
       try {
         const res = await fetch("/auth/create-user", {
