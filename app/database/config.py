@@ -6,7 +6,7 @@ from urllib.parse import quote_plus
 load_dotenv()
 
 DB_USER = os.getenv("DB_USER", "azureuser")
-DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD","MdiD@N3r7S2Pht!"))
+DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
 DB_HOST = os.getenv("DB_HOST", "tcembrapadb.mysql.database.azure.com")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "tcembrapadb")
