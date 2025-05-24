@@ -4,7 +4,7 @@ from app.repository import op_internas_embrapa_repository
 from app.repository import op_internas_db_repository
 from app.util.url.urls_download import url_producao, url_comercializacao, urls_processamento
 import app.model.model as model
-
+from app.util.url.gerenciamento_estado import estado 
 def find(year, opcao,subopcao=None):  
     """
     Busca os dados via scrapper ou via banco de dados.
@@ -16,8 +16,11 @@ def find(year, opcao,subopcao=None):
         result = op_internas_db_repository.find(year,__get_tipo_registro(opcao),opcao,subopcao)
 
         print("(find_by_year) Obtendo o dado do database")   
+        estado.repository="database"
     else:
          print("(find_by_year) Obtendo o dado da embrapa (via scapping)")
+         estado.repository="scapping"
+
 
     if not result:
         raise HTTPException(status_code=404, detail="Registros não localizados") 

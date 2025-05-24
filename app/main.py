@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from app.routes import opcoes,auth
 import uvicorn 
-from app.util.url.prefix import prefix
+from app.util.url.gerenciamento_estado import estado
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 import pymysql.err
@@ -31,11 +31,12 @@ if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
  
 @app.middleware("http")
-async def intercept_all_requests(request: Request, call_next): 
-           
-        prefix.valor = "xpto" if "fallback" in request.query_params and str.lower(request.query_params["fallback"])=="true" else ""
-
-        return await call_next(request)      
+async def intercept_all_requests(request: Request, call_next):            
+        estado.prefixo_url = "xpto" if "fallback" in request.query_params and str.lower(request.query_params["fallback"])=="true" else ""
+        response =  await call_next(request)   
+        response.headers["repository"]=estado.repository
+        return response
+       
  
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):  
