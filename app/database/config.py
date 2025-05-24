@@ -19,3 +19,5 @@ SQLALCHEMY_DATABASE_URI = (
 )
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+##-- C:\desenv\python\tcembrapa-atual\TC-Embrapa-FIAP\certs\DigiCertGlobalRootCA.crt.pem"

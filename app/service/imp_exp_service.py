@@ -1,10 +1,8 @@
-from app.repository import scapper_repository
-from app.repository import imp_exp_embrapa_repository
-from app.repository import imp_exp_db_repository
-from app.urls_download import urls_importacao, urls_exportacao
-import app.model as model
-
-
+from fastapi import HTTPException
+from app.repository import scapper_repository,imp_exp_db_repository,imp_exp_embrapa_repository
+from app.util.url.urls_download import urls_importacao, urls_exportacao
+import app.model.model as model
+from app.util.url.gerenciamento_estado import estado 
 def find(year, opcao, subopcao=None):
     """
     Busca os dados via scrapper ou via banco de dados.
@@ -20,9 +18,14 @@ def find(year, opcao, subopcao=None):
         )
 
         print("(find_by_year) Obtendo o dado do database")
+        estado.repository="database"
     else:
         print("(find_by_year) Obtendo o dado da embrapa (via scapping)")
-
+        estado.repository="scapping"
+        
+    if not result:
+        raise HTTPException(status_code=404, detail="Registros não localizados") 
+        
     return result
 
 
@@ -38,7 +41,7 @@ def save_all(tipo_operacao):
         imp_exp_embrapa_repository.find_all(tipo_registro, tipo_operacao, url),
     )
 
-    return None
+    return "Registros carregados com sucesso"
 
 
 def __get_tipo_registro(tipo_operacao: str):

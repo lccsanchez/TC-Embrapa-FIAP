@@ -4,7 +4,7 @@ from  app.util import csv
 
 T = TypeVar('T') 
 
-def __load(url: str, key: str) -> pd.DataFrame:
+def __load(url: str) -> pd.DataFrame:
 
     print(f'A url final é {url}')
 
@@ -21,16 +21,8 @@ def __load(url: str, key: str) -> pd.DataFrame:
 
     except Exception as e:
         print(f"Erro ao transformar {url}: {e}")
-        print("Tentando carregar o arquivo local...")
-
-        try:
-            csv_data = csv.read_local(key)
-            print(f"Arquivo local carregado com sucesso: {key}")
-            return csv_data
-
-        except Exception as e:
-            print(f"Erro ao carregar o arquivo local: {e}")
-            return None
+       
+        return None
 
 def execute(urls_dict: dict) -> List[Tuple[str,pd.DataFrame]]:  
 

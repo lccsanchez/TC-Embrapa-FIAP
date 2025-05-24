@@ -1,6 +1,6 @@
 
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from starlette import status
 from app.dto.user import UserDTO
 from app.dto.token import TokenDTO
