@@ -6,7 +6,7 @@ from urllib.parse import quote_plus
 load_dotenv()
 
 DB_USER = os.getenv("DB_USER", "azureuser")
-DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD"))
+DB_PASSWORD = quote_plus(os.getenv("DB_PASSWORD","MdiD@N3r7S2Pht!"))
 DB_HOST = os.getenv("DB_HOST", "tcembrapadb.mysql.database.azure.com")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "tcembrapadb")
@@ -19,3 +19,5 @@ SQLALCHEMY_DATABASE_URI = (
 )
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+
+##-- C:\desenv\python\tcembrapa-atual\TC-Embrapa-FIAP\certs\DigiCertGlobalRootCA.crt.pem"

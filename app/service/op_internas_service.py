@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from app.repository import scapper_repository
 from app.repository import op_internas_embrapa_repository
 from app.repository import op_internas_db_repository
@@ -18,6 +19,9 @@ def find(year, opcao,subopcao=None):
     else:
          print("(find_by_year) Obtendo o dado da embrapa (via scapping)")
 
+    if not result:
+        raise HTTPException(status_code=404, detail="Registros não localizados") 
+    
     return result
 
 def save_all(tipo_operacao):
@@ -29,7 +33,7 @@ def save_all(tipo_operacao):
    
     op_internas_db_repository.add_all(tipo_operacao,op_internas_embrapa_repository.find_all(tipo_registro,tipo_operacao,url))
    
-    return None
+    return "Registros carregados com sucesso"
 
 def __get_tipo_registro(tipo_operacao: str):  
     """
