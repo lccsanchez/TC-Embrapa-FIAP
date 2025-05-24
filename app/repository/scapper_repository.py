@@ -1,6 +1,6 @@
 from app.util.scrapping.strategy_just_item import JustItems
 from app.util.scrapping.strategy_with_subitems import WithSubItems
-import app.urls_scrapping as urls
+import app.util.url.urls_scrapping as urls
 from app.util import reader
 
 

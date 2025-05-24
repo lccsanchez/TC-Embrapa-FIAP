@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from app.routes import opcoes,auth
 import uvicorn 
-from prefix import prefix
+from app.util.url.prefix import prefix
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 import pymysql.err

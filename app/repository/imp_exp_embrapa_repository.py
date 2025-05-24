@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pandas as pd
 from unidecode import unidecode
 from app.util import etl
-from app.model import ImportacaoExportacao
+from app.model.model import ImportacaoExportacao
 
 def find_all(
     tipo_registro: type, tipo_operacao: str, url: str

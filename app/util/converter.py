@@ -1,6 +1,6 @@
 from app.dto.registro_quantidade_valor import RegistroQuantidadeValorDTO
 from app.dto.registro_total import RegistroTotalDTO
-from app.model import ImportacaoExportacao, Produto
+from app.model.model import ImportacaoExportacao, Produto
 from typing import List,Dict,Set
 
 def detectar_prefixos(producoes: List[Produto]) -> Set[str]:

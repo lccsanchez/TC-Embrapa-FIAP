@@ -2,8 +2,8 @@ from fastapi import HTTPException
 from app.repository import scapper_repository
 from app.repository import op_internas_embrapa_repository
 from app.repository import op_internas_db_repository
-from app.urls_download import url_producao, url_comercializacao, urls_processamento
-import app.model as model
+from app.util.url.urls_download import url_producao, url_comercializacao, urls_processamento
+import app.model.model as model
 
 def find(year, opcao,subopcao=None):  
     """

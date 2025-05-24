@@ -1,7 +1,7 @@
 from sqlalchemy import and_
-from app.model import Produto, Registros
+from app.model.model import Produto, Registros
 from sqlalchemy.orm import joinedload, with_loader_criteria
-from app.database import SessionLocal
+from app.database.session import SessionLocal
 from typing import List
 from app.util import converter
 

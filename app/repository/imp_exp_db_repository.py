@@ -1,6 +1,6 @@
-from app.model import ImportacaoExportacao, RegistroImportacaoExportacao
+from app.model.model import ImportacaoExportacao, RegistroImportacaoExportacao
 from sqlalchemy.orm import aliased
-from app.database import SessionLocal
+from app.database.session import SessionLocal
 from typing import List
 from app.util import converter
 from sqlalchemy import func

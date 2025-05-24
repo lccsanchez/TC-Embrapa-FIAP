@@ -3,10 +3,10 @@ from os import getenv
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from fastapi.security import  OAuth2PasswordBearer
-from app.model import Users
+from app.model.model import Users
 from app.dto.user import UserDTO
 from sqlalchemy.exc import IntegrityError
-from app.database import SessionLocal
+from app.database.session import SessionLocal
 
 load_dotenv()
 
