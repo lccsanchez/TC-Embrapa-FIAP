@@ -1,17 +1,20 @@
-from dotenv import load_dotenv
+"""Serviço de autenticação de usuários."""
+
 from os import getenv
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
-from app.dto.user import UserDTO
 from passlib.context import CryptContext
-from fastapi.security import  OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
+from app.dto.user import UserDTO
 from app.repository import user_repository
- 
+
+
 load_dotenv()
-SECRET_KEY = getenv("SECRET_KEY") 
+SECRET_KEY = getenv("SECRET_KEY")
 ALGORITHM = getenv("ALGORITHM")
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -19,17 +22,19 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
+
 def authenticate_user(username: str, password: str):
     """
     Autentica o usuário e gera um token JWT.
     """
-    user = user_repository.authenticate_user(username,password)
+    user = user_repository.authenticate_user(username, password)
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user."
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate user."
         )
-    
+
     token = create_access_token(
         user.username, user.id, user.role, timedelta(minutes=20)
     )
@@ -37,7 +42,12 @@ def authenticate_user(username: str, password: str):
     return {"access_token": token, "token_type": "bearer"}
 
 
-def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta):
+def create_access_token(
+    username: str,
+    user_id: int,
+    role: str,
+    expires_delta: timedelta
+):
     """
     Cria um token JWT com informações do usuário.
     """
@@ -64,8 +74,10 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         return {"username": username, "id": user_id, "user_role": user_role}
     except Exception as ex:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Authentication Failed : {ex}"
-        )
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Authentication Failed : {ex}"
+        ) from ex
+
 
 def create_user(user: UserDTO):
     """

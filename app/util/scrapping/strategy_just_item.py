@@ -1,9 +1,13 @@
+"""Estratégia para scraping de itens simples."""
+
 from bs4 import BeautifulSoup
+
 
 class JustItems():
     """Estratégia para o scraping do tipo 2."""
 
     def scrape(self, html_content: str):
+        """Realiza o scraping de itens simples."""
         soup = BeautifulSoup(html_content, "html.parser")
         items = soup.find(class_="tb_base tb_dados")
         results = {}

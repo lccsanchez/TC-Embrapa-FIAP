@@ -1,13 +1,25 @@
-#URLS para scraping de dados direto do site da Embrapa
+"""URLs e sessões para scraping de dados do site da Embrapa."""
 
 from app.util.url.gerenciamento_estado import estado
 
+
 def get_url_scrapping(ano: str, cod_opcao: str, cod_subopcao: str = None):
-    return f"http://{estado.prefixo_url}vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}" if cod_subopcao is None else f"http://{estado.prefixo_url}vitibrasil.cnpuv.embrapa.br/index.php?ano={ano}&opcao={cod_opcao}&subopcao={cod_subopcao}"
+    """Monta a URL para scraping de acordo com os parâmetros."""
+    base_url = (
+        f"http://{estado.prefixo_url}"
+        "vitibrasil.cnpuv.embrapa.br/index.php"
+    )
+    if cod_subopcao is None:
+        return f"{base_url}?ano={ano}&opcao={cod_opcao}"
+    return (
+        f"{base_url}?ano={ano}&opcao={cod_opcao}"
+        f"&subopcao={cod_subopcao}"
+    )
+
 
 sessions = {
     "producao": {"item": "opt_02"},
-    "processamento": { 
+    "processamento": {
         "item": "opt_03",
         "sub": {
             "ProcessaViniferas": "subopt_01",
@@ -15,7 +27,7 @@ sessions = {
             "ProcessaMesa": "subopt_03",
             "ProcessaSemclass": "subopt_04",
         }
-        },
+    },
     "comercio": {"item": "opt_04"},
     "importacao": {
         "item": "opt_05",

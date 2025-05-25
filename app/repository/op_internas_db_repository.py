@@ -1,19 +1,25 @@
-from sqlalchemy import and_
-from app.model.model import Produto, Registros
-from sqlalchemy.orm import joinedload, with_loader_criteria
-from app.database.session import SessionLocal
+"""Repositório para operações de Produto e Registros no banco de dados."""
+
 from typing import List
+from sqlalchemy import and_
+from sqlalchemy.orm import joinedload, with_loader_criteria
+from app.model.model import Produto, Registros
+from app.database.session import SessionLocal
 from app.util import converter
+
 
 def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
     """
-    Busca registros de Produto no banco de dados com base no ano, tipo de operação e classificação.
+    Busca registros de Produto no banco de dados com base no ano,
+    tipo de operação e classificação.
     """
     opcao = str.lower(opcao)
     subopcao = None if not subopcao else str(subopcao)
 
-    filters = [ tipo_registro.ano == int(year), tipo_registro.tipo_operacao == opcao ] 
-
+    filters = [
+        tipo_registro.ano == int(year),
+        tipo_registro.tipo_operacao == opcao
+    ]
     if subopcao:
         filters.append(Produto.classificacao == subopcao)
 
@@ -21,9 +27,7 @@ def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
         subquery_ids = (
             session.query(Produto.id)
             .join(Produto.registros)
-            .filter(
-               and_(*filters)
-            )
+            .filter(and_(*filters))
             .group_by(Produto.id, Produto.source_id)
             .order_by(Produto.source_id)
             .subquery()
@@ -35,14 +39,15 @@ def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
 
         producoes = (
             session.query(Produto)
-            .filter(
-                and_(*filters)
-            )
+            .filter(and_(*filters))
             .options(
                 joinedload(Produto.registros),
                 with_loader_criteria(
                     Registros,
-                    (Registros.ano == int(year)) & (Registros.tipo_operacao == opcao),
+                    (
+                        (Registros.ano == int(year)) &
+                        (Registros.tipo_operacao == opcao)
+                    ),
                     include_aliases=True
                 )
             )
@@ -50,6 +55,7 @@ def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
             .all()
         )
         return converter.model_to_dto(producoes)
+
 
 def add_all(nome_registro: str, items: List[Produto]):
     """
@@ -60,12 +66,14 @@ def add_all(nome_registro: str, items: List[Produto]):
             remove_all(nome_registro, session)
             session.add_all(items)
             session.commit()
-    except Exception as e:
-        print(f"Erro no método add_all: {e}")
+    except Exception as exc:
+        print(f"Erro no método add_all: {exc}")
+
 
 def remove_all(nome_registro: str, session=None):
     """
-    Remove todos os registros de Produto relacionados ao tipo de operação informado.
+    Remove todos os registros de Produto relacionados ao
+    tipo de operação informado.
     """
     own_session = False
     if session is None:
@@ -84,10 +92,11 @@ def remove_all(nome_registro: str, session=None):
             .delete(synchronize_session=False)
         if own_session:
             session.commit()
-    except Exception as e:
-        print(f"Erro no método remove_all: {e}")
+    except Exception as exc:
+        print(f"Erro no método remove_all: {exc}")
         if own_session:
             session.rollback()
+        raise
     finally:
         if own_session:
             session.close()
