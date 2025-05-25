@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 """Modelos ORM do projeto."""
 
 from decimal import Decimal

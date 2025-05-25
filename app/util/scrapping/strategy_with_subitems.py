@@ -1,3 +1,4 @@
+# pylint: disable=too-few-public-methods
 """Estratégia para scraping de itens com subitens."""
 
 from bs4 import BeautifulSoup
