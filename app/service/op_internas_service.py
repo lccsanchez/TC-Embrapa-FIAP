@@ -5,11 +5,17 @@ Serviço para operações internas (produção, processamento, comercialização
 from fastapi import HTTPException
 
 from app.model import model
-from app.repository import (op_internas_db_repository,
-                            op_internas_embrapa_repository, scapper_repository)
+from app.repository import (
+    op_internas_db_repository,
+    op_internas_embrapa_repository,
+    scapper_repository,
+)
 from app.util.url.gerenciamento_estado import estado
-from app.util.url.urls_download import (url_comercializacao, url_producao,
-                                        urls_processamento)
+from app.util.url.urls_download import (
+    url_comercializacao,
+    url_producao,
+    urls_processamento,
+)
 
 
 def find(year, opcao, subopcao=None):

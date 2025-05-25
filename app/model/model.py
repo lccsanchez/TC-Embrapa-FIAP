@@ -3,9 +3,8 @@
 
 from decimal import Decimal
 
-from sqlalchemy import Boolean, ForeignKey, Integer, Numeric, String
-from sqlalchemy.orm import (Mapped, declarative_base, mapped_column,
-                            relationship)
+from sqlalchemy import Boolean, ForeignKey, Index, Integer, Numeric, String
+from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
 
 Base = declarative_base()
 
@@ -20,7 +19,7 @@ class Produto(Base):
     control: Mapped[str] = mapped_column(String(100), nullable=True)
     produto: Mapped[str] = mapped_column(String(200), nullable=True)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
-    classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
+    classificacao: Mapped[str] = mapped_column(String(100), nullable=True, index=True)
 
     registros: Mapped[list["Registros"]] = relationship(
         "Registros", back_populates="produto", cascade="all, delete-orphan"
@@ -41,7 +40,7 @@ class Registros(Base):
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     id_produto: Mapped[str] = mapped_column(
-        ForeignKey("produtos.id", ondelete="CASCADE"), nullable=False
+        ForeignKey("produtos.id", ondelete="CASCADE"), nullable=False, index=True
     )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)
     ano: Mapped[int] = mapped_column(nullable=False)
@@ -55,6 +54,14 @@ class Registros(Base):
     }
 
     produto: Mapped["Produto"] = relationship("Produto", back_populates="registros")
+
+    __table_args__ = (
+        Index(
+            "ix_registros_ano_tipo_operacao",
+            "ano",
+            "tipo_operacao",
+        ),
+    )
 
     def __repr__(self):
         return (
@@ -105,7 +112,7 @@ class ImportacaoExportacao(Base):
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     source_id: Mapped[int] = mapped_column(Integer, nullable=True)
     pais: Mapped[str] = mapped_column(String(200), nullable=False)
-    classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
+    classificacao: Mapped[str] = mapped_column(String(100), nullable=True, index=True)
 
     registros_imp_exp: Mapped[list["RegistroImportacaoExportacao"]] = relationship(
         "RegistroImportacaoExportacao",
@@ -127,7 +134,9 @@ class RegistroImportacaoExportacao(Base):
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     id_pais: Mapped[str] = mapped_column(
-        ForeignKey("importacao_exportacao.id", ondelete="CASCADE"), nullable=False
+        ForeignKey("importacao_exportacao.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)
     ano: Mapped[int] = mapped_column(nullable=False)
@@ -145,6 +154,14 @@ class RegistroImportacaoExportacao(Base):
 
     importacao_exportacao: Mapped["ImportacaoExportacao"] = relationship(
         "ImportacaoExportacao", back_populates="registros_imp_exp"
+    )
+
+    __table_args__ = (
+        Index(
+            "ix_registros_imp_exp_ano_tipo_operacao",
+            "ano",
+            "tipo_operacao",
+        ),
     )
 
     def __repr__(self):

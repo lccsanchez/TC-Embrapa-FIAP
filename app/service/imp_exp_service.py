@@ -3,8 +3,11 @@
 from fastapi import HTTPException
 
 from app.model import model
-from app.repository import (imp_exp_db_repository, imp_exp_embrapa_repository,
-                            scapper_repository)
+from app.repository import (
+    imp_exp_db_repository,
+    imp_exp_embrapa_repository,
+    scapper_repository,
+)
 from app.util.url.gerenciamento_estado import estado
 from app.util.url.urls_download import urls_exportacao, urls_importacao
 
