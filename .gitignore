@@ -30,3 +30,7 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# Pytest_cache files
+.pytest_cache/
+

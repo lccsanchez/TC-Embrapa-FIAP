@@ -1,11 +1,13 @@
-from dotenv import load_dotenv
+"""Repositório para operações de usuário."""
+
 from os import getenv
+from dotenv import load_dotenv
 from fastapi import HTTPException
 from passlib.context import CryptContext
-from fastapi.security import  OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.exc import IntegrityError
 from app.model.model import Users
 from app.dto.user import UserDTO
-from sqlalchemy.exc import IntegrityError
 from app.database.session import SessionLocal
 
 load_dotenv()
@@ -16,7 +18,9 @@ ALGORITHM = getenv("ALGORITHM")
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
+
 def create_user(user: UserDTO):
+    """Cria um novo usuário no banco de dados."""
     try:
         with SessionLocal() as session:
             create_user_model = Users(
@@ -31,21 +35,34 @@ def create_user(user: UserDTO):
             )
             session.add(create_user_model)
             session.commit()
-    except IntegrityError:
+    except IntegrityError as exc:
         session.rollback()
         raise HTTPException(
             status_code=409,
             detail="Usuário ou e-mail já existente."
+        ) from exc
+    except Exception as exc:
+        print(f"Erro no método create_user: {exc}")
+        mensagem_erro = str(exc).replace(
+            getattr(
+                create_user_model,
+                "hashed_password",
+                "********"
+            ),
+            "********"
         )
-    except Exception as e:
-        print(f"Erro no método create_user: {e}")
-        mensagem_erro = str(e).replace(create_user_model.hashed_password, "********"),
         raise HTTPException(
             status_code=500,
-            detail = f"Não foi possível criar o usuário. Verifique os dados e tente novamente. {mensagem_erro}"
-        )
+            detail=(
+                "Não foi possível criar o usuário. "
+                "Verifique os dados e tente novamente. "
+                f"{mensagem_erro}"
+            )
+        ) from exc
+
 
 def authenticate_user(username: str, password: str):
+    """Autentica um usuário pelo nome e senha."""
     with SessionLocal() as session:
         user = session.query(Users).filter(Users.username == username).first()
         if not user:

@@ -1,5 +1,10 @@
-class gerenciamento_estado:
+"""Gerenciamento de estado para URLs dinâmicas."""
+
+
+class GerenciamentoEstado:
+    """Classe para armazenar estado de prefixo e repositório."""
     prefixo_url = ""
-    repository =""
-    
-estado = gerenciamento_estado()
+    repository = ""
+
+
+estado = GerenciamentoEstado()

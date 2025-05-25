@@ -1,6 +1,8 @@
+"""Configuração de conexão com o banco de dados."""
+
+from urllib.parse import quote_plus
 import os
 from dotenv import load_dotenv
-from urllib.parse import quote_plus
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -19,5 +21,3 @@ SQLALCHEMY_DATABASE_URI = (
 )
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-
-##-- C:\desenv\python\tcembrapa-atual\TC-Embrapa-FIAP\certs\DigiCertGlobalRootCA.crt.pem"
