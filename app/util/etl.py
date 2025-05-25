@@ -1,9 +1,10 @@
 """Funções utilitárias para ETL de dados."""
 
 from typing import TypeVar
-import pandas as pd
-from app.util import csv
 
+import pandas as pd
+
+from app.util import csv
 
 T = TypeVar("T")
 

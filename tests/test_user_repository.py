@@ -1,6 +1,7 @@
 import pytest
-from app.repository import user_repository
+
 from app.dto.user import UserDTO
+from app.repository import user_repository
 
 
 def test_create_user_success(monkeypatch):

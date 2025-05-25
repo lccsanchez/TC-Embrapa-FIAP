@@ -1,17 +1,18 @@
 """Serviço de autenticação de usuários."""
 
+from datetime import datetime, timedelta, timezone
 from os import getenv
-from datetime import timedelta, datetime, timezone
 from typing import Annotated
+
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
-from starlette import status
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
+from passlib.context import CryptContext
+from starlette import status
+
 from app.dto.user import UserDTO
 from app.repository import user_repository
-
 
 load_dotenv()
 SECRET_KEY = getenv("SECRET_KEY")

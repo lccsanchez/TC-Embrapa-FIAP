@@ -2,9 +2,11 @@
 
 import uuid
 from typing import List, Tuple
+
 import pandas as pd
-from app.util import etl
+
 from app.model.model import Produto
+from app.util import etl
 
 
 def find_all(tipo_registro: type, tipo_operacao: str, url: str) -> List[Produto] | None:

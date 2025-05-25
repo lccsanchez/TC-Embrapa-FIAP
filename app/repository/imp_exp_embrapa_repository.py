@@ -4,10 +4,12 @@ Repositório para operações de ImportacaoExportacao a partir de ETL Embrapa.
 
 import uuid
 from typing import List, Tuple
+
 import pandas as pd
 from unidecode import unidecode
-from app.util import etl
+
 from app.model.model import ImportacaoExportacao
+from app.util import etl
 
 
 def find_all(

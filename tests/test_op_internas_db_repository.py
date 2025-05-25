@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
+from sqlalchemy import literal_column, select
+
 from app.repository import op_internas_db_repository
-from sqlalchemy import select, literal_column
 
 
 class FakeSubquery:

@@ -1,10 +1,12 @@
 """Repositório para operações de Produto e Registros no banco de dados."""
 
 from typing import List
+
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload, with_loader_criteria
-from app.model.model import Produto, Registros
+
 from app.database.session import SessionLocal
+from app.model.model import Produto, Registros
 from app.util import converter
 
 

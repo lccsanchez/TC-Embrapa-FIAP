@@ -1,11 +1,13 @@
 """Rotas de autenticação da API."""
 
 from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
-from app.dto.user import UserDTO
+
 from app.dto.token import TokenDTO
+from app.dto.user import UserDTO
 from app.service import auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])

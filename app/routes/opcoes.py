@@ -1,9 +1,9 @@
 """Rotas de operações internas e importação/exportação."""
 
 from fastapi import APIRouter, Depends
-from app.service import auth_service
+
+from app.service import auth_service, imp_exp_service
 from app.service import op_internas_service as service
-from app.service import imp_exp_service
 
 router = APIRouter()
 

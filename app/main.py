@@ -1,12 +1,14 @@
 """Módulo principal da API Embrapa."""
 
 from typing import Union
+
 import pymysql.err
 import uvicorn
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from app.routes import opcoes, auth
+
+from app.routes import auth, opcoes
 from app.util.url.gerenciamento_estado import estado
 
 app = FastAPI(

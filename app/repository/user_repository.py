@@ -1,14 +1,16 @@
 """Repositório para operações de usuário."""
 
 from os import getenv
+
 from dotenv import load_dotenv
 from fastapi import HTTPException
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from app.model.model import Users
-from app.dto.user import UserDTO
+
 from app.database.session import SessionLocal
+from app.dto.user import UserDTO
+from app.model.model import Users
 
 load_dotenv()
 

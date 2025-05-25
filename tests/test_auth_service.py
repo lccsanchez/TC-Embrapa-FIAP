@@ -1,9 +1,11 @@
 import asyncio
 from datetime import timedelta
+
 import pytest
-from app.service import auth_service
-from app.dto.user import UserDTO
 from jose import jwt
+
+from app.dto.user import UserDTO
+from app.service import auth_service
 
 
 def test_create_access_token():

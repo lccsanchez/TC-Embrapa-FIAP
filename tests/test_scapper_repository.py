@@ -1,4 +1,5 @@
 import pytest
+
 from app.repository import scapper_repository
 
 

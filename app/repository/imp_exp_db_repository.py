@@ -1,10 +1,12 @@
 """Repositório para operações de ImportacaoExportacao no banco de dados."""
 
 from typing import List
-from sqlalchemy.orm import aliased, contains_eager
+
 from sqlalchemy import func
-from app.model.model import ImportacaoExportacao, RegistroImportacaoExportacao
+from sqlalchemy.orm import aliased, contains_eager
+
 from app.database.session import SessionLocal
+from app.model.model import ImportacaoExportacao, RegistroImportacaoExportacao
 from app.util import converter
 
 

@@ -2,13 +2,10 @@
 """Modelos ORM do projeto."""
 
 from decimal import Decimal
-from sqlalchemy import String, ForeignKey, Integer, Boolean, Numeric
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column,
-    relationship,
-    declarative_base,
-)
+
+from sqlalchemy import Boolean, ForeignKey, Integer, Numeric, String
+from sqlalchemy.orm import (Mapped, declarative_base, mapped_column,
+                            relationship)
 
 Base = declarative_base()
 

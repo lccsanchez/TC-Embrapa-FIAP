@@ -1,9 +1,9 @@
 """Repositório para scraping de dados do site da Embrapa."""
 
-from app.util.scrapping.strategy_just_item import JustItems
-from app.util.scrapping.strategy_with_subitems import WithSubItems
 import app.util.url.urls_scrapping as urls
 from app.util import reader
+from app.util.scrapping.strategy_just_item import JustItems
+from app.util.scrapping.strategy_with_subitems import WithSubItems
 
 
 def find_with_subitems(year: str, opcao, subopcao=None):
