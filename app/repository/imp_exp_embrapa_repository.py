@@ -1,6 +1,7 @@
 """
 Repositório para operações de ImportacaoExportacao a partir de ETL Embrapa.
 """
+
 import uuid
 from typing import List, Tuple
 import pandas as pd
@@ -32,9 +33,7 @@ def __converter(
             df.columns = [unidecode(col.lower()) for col in df.columns]
             df = df.where(pd.notnull(df), None)
             ano_colunas = [
-                col
-                for col in df.columns
-                if str(col).isdigit() and len(str(col)) == 4
+                col for col in df.columns if str(col).isdigit() and len(str(col)) == 4
             ]
 
             for _, row in df.iterrows():
@@ -43,10 +42,12 @@ def __converter(
                         id=str(uuid.uuid4()),
                         ano=int(ano),
                         tipo_operacao=tipo_operacao,
-                        quantidade=0 if not str(row[ano]).isdigit()
-                        else (row[ano]),
-                        valor=0 if not str(row[f"{ano}.1"]).isdigit()
-                        else (row[f"{ano}.1"])
+                        quantidade=0 if not str(row[ano]).isdigit() else (row[ano]),
+                        valor=(
+                            0
+                            if not str(row[f"{ano}.1"]).isdigit()
+                            else (row[f"{ano}.1"])
+                        ),
                     )
                     for ano in ano_colunas
                     if pd.notna(row[ano])

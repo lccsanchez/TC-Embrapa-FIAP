@@ -7,11 +7,7 @@ from app.util import etl
 from app.model.model import Produto
 
 
-def find_all(
-    tipo_registro: type,
-    tipo_operacao: str,
-    url: str
-) -> List[Produto] | None:
+def find_all(tipo_registro: type, tipo_operacao: str, url: str) -> List[Produto] | None:
     """Executa o ETL e converte os dados para objetos Produto."""
     try:
         return __converter(tipo_registro, tipo_operacao, etl.execute(url))
@@ -21,9 +17,7 @@ def find_all(
 
 
 def __converter(
-    tipo_registro: type,
-    tipo_operacao: str,
-    dataframes: List[Tuple[str, pd.DataFrame]]
+    tipo_registro: type, tipo_operacao: str, dataframes: List[Tuple[str, pd.DataFrame]]
 ) -> List[Produto]:
     items = []
 
@@ -32,8 +26,7 @@ def __converter(
             df.columns = df.columns.str.lower()
             df = df.where(pd.notnull(df), None)
             ano_colunas = [
-                col for col in df.columns
-                if str(col).isdigit() and len(str(col)) == 4
+                col for col in df.columns if str(col).isdigit() and len(str(col)) == 4
             ]
 
             for key, row in df.iterrows():
@@ -42,33 +35,29 @@ def __converter(
                         id=str(uuid.uuid4()),
                         ano=int(ano),
                         tipo_operacao=tipo_operacao,
-                        quantidade=(
-                            0 if not str(row[ano]).isdigit()
-                            else row[ano]
-                        )
+                        quantidade=(0 if not str(row[ano]).isdigit() else row[ano]),
                     )
                     for ano in ano_colunas
                     if pd.notna(row[ano])
                 ]
                 produto_nome = (
-                    row['produto']
-                    if "produto" in df.columns
-                    else row["cultivar"]
+                    row["produto"] if "produto" in df.columns else row["cultivar"]
                 )
                 produto_nome = produto_nome.strip()
                 control_name = (
-                    row['control']
-                    if row['control']
-                    else produto_nome).strip()
+                    row["control"] if row["control"] else produto_nome
+                ).strip()
                 if registro_anos:
-                    items.append(Produto(
-                        id=str(uuid.uuid4()),
-                        source_id=int(row['id']),
-                        control=control_name,
-                        produto=produto_nome,
-                        classificacao=str.lower(classificacao),
-                        registros=registro_anos
-                    ))
+                    items.append(
+                        Produto(
+                            id=str(uuid.uuid4()),
+                            source_id=int(row["id"]),
+                            control=control_name,
+                            produto=produto_nome,
+                            classificacao=str.lower(classificacao),
+                            registros=registro_anos,
+                        )
+                    )
 
         return items
 

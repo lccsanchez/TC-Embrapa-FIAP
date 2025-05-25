@@ -39,11 +39,7 @@ async def save_all_com(_=Depends(auth_service.get_current_user)):
 
 
 @router.get("/processamento")
-async def get_pro(
-    year: str,
-    subopcao: str,
-    _=Depends(auth_service.get_current_user)
-):
+async def get_pro(year: str, subopcao: str, _=Depends(auth_service.get_current_user)):
     """Consulta processamento."""
     return service.find(year, "processamento", subopcao)
 
@@ -55,11 +51,7 @@ async def save_all_pro(_=Depends(auth_service.get_current_user)):
 
 
 @router.get("/importacao")
-async def get_imp(
-    year: str,
-    subopcao: str,
-    _=Depends(auth_service.get_current_user)
-):
+async def get_imp(year: str, subopcao: str, _=Depends(auth_service.get_current_user)):
     """Consulta importação."""
     return imp_exp_service.find(year, "importacao", subopcao)
 
@@ -71,11 +63,7 @@ async def save_all_imp(_=Depends(auth_service.get_current_user)):
 
 
 @router.get("/exportacao")
-async def get_exp(
-    year: str,
-    subopcao: str,
-    _=Depends(auth_service.get_current_user)
-):
+async def get_exp(year: str, subopcao: str, _=Depends(auth_service.get_current_user)):
     """Consulta exportação."""
     return imp_exp_service.find(year, "exportacao", subopcao)
 

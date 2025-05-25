@@ -52,7 +52,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         request=request,
         exc=exc,
         default_message=exc.detail,
-        status_code=exc.status_code
+        status_code=exc.status_code,
     )
 
 
@@ -63,7 +63,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
         request=request,
         exc=exc,
         default_message="Erro interno no servidor",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -74,7 +74,7 @@ async def value_error_handler(request: Request, exc: ValueError):
         request=request,
         exc=exc,
         default_message="Parametro(s) inválido(s)",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -83,11 +83,13 @@ def build_error_response(
     exc: Union[Exception, HTTPException, pymysql.err.OperationalError],
     default_message: str,
     status_code: int = None,
-    custom_detail: str = None
+    custom_detail: str = None,
 ) -> JSONResponse:
     """Constrói uma resposta JSON para erros."""
-    final_status_code = status_code if status_code else (
-        exc.status_code if isinstance(exc, HTTPException) else 500
+    final_status_code = (
+        status_code
+        if status_code
+        else (exc.status_code if isinstance(exc, HTTPException) else 500)
     )
     detail = custom_detail if custom_detail else str(exc)
     response = {

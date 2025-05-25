@@ -15,16 +15,12 @@ class FakeSubquery:
 @pytest.fixture
 def mock_session(monkeypatch):
     session = MagicMock()
-    monkeypatch.setattr(
-        op_internas_db_repository, "SessionLocal", lambda: session
-    )
+    monkeypatch.setattr(op_internas_db_repository, "SessionLocal", lambda: session)
     return session
 
 
 def test_find_success(monkeypatch, mock_session):
-    monkeypatch.setattr(
-        'app.util.converter.model_to_dto', lambda x: ["converted"]
-    )
+    monkeypatch.setattr("app.util.converter.model_to_dto", lambda x: ["converted"])
 
     query = mock_session.query.return_value
     join2 = query.join.return_value
@@ -35,6 +31,7 @@ def test_find_success(monkeypatch, mock_session):
     ordered.all.return_value = ["fake_result"]
 
     from app.model.model import RegistroProducao
+
     result = op_internas_db_repository.find(2023, RegistroProducao, "producao")
 
     assert result == ["converted"]

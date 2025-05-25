@@ -30,9 +30,7 @@ def find(year, opcao, subopcao=None):
         estado.repository = "scapping"
 
     if not result:
-        raise HTTPException(
-            status_code=404, detail="Registros não localizados"
-        )
+        raise HTTPException(status_code=404, detail="Registros não localizados")
 
     return result
 

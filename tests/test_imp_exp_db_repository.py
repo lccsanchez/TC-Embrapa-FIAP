@@ -20,18 +20,14 @@ def mock_session(monkeypatch):
     context_manager.__enter__.return_value = session
     context_manager.__exit__.return_value = None
 
-    monkeypatch.setattr(
-        imp_exp_db_repository, "SessionLocal", lambda: context_manager
-    )
+    monkeypatch.setattr(imp_exp_db_repository, "SessionLocal", lambda: context_manager)
 
     return session
 
 
 def test_add_all_success(monkeypatch, mock_session):
     monkeypatch.setattr(
-        imp_exp_db_repository,
-        "remove_all",
-        lambda nome, session=None: None
+        imp_exp_db_repository, "remove_all", lambda nome, session=None: None
     )
 
     imp_exp_db_repository.add_all("importacao", ["item1", "item2"])
@@ -42,9 +38,7 @@ def test_add_all_success(monkeypatch, mock_session):
 
 def test_add_all_exception(monkeypatch, mock_session):
     monkeypatch.setattr(
-        imp_exp_db_repository,
-        "remove_all",
-        lambda nome, session=None: None
+        imp_exp_db_repository, "remove_all", lambda nome, session=None: None
     )
 
     mock_session.add_all.side_effect = Exception("Database error")
@@ -77,9 +71,7 @@ def test_remove_all_exception(monkeypatch, mock_session):
 
 
 def test_find_success(monkeypatch, mock_session):
-    monkeypatch.setattr(
-        'app.util.converter.imp_exp_to_dto', lambda x: ["converted"]
-    )
+    monkeypatch.setattr("app.util.converter.imp_exp_to_dto", lambda x: ["converted"])
 
     query = mock_session.query.return_value
     join2 = query.join.return_value

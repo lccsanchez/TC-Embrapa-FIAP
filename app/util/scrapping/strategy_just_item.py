@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup
 
 
-class JustItems():
+class JustItems:
     """Estratégia para o scraping do tipo 2."""
 
     def scrape(self, html_content: str):

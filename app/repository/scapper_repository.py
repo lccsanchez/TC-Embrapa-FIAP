@@ -35,10 +35,7 @@ def __get_content(year: str, opcao, subopcao=None):
     if not cod_opcao:
         raise ValueError(f"Opção informada é invalida : {opcao}")
 
-    cod_sub_opcao = (
-        urls.sessions[opcao]["sub"].get(subopcao)
-        if subopcao else None
-    )
+    cod_sub_opcao = urls.sessions[opcao]["sub"].get(subopcao) if subopcao else None
 
     if not cod_sub_opcao and str.rstrip(str.lstrip(opcao)) == "processamento":
         raise ValueError(f"Subopcao informada é invalida : {subopcao}")

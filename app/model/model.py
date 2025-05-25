@@ -14,7 +14,8 @@ Base = declarative_base()
 
 class Produto(Base):
     """Tabela de produtos."""
-    __tablename__ = 'produtos'
+
+    __tablename__ = "produtos"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     source_id: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -24,9 +25,7 @@ class Produto(Base):
     classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     registros: Mapped[list["Registros"]] = relationship(
-        'Registros',
-        back_populates='produto',
-        cascade="all, delete-orphan"
+        "Registros", back_populates="produto", cascade="all, delete-orphan"
     )
 
     def __repr__(self):
@@ -39,12 +38,12 @@ class Produto(Base):
 
 class Registros(Base):
     """Tabela de registros de produtos."""
-    __tablename__ = 'registros'
+
+    __tablename__ = "registros"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     id_produto: Mapped[str] = mapped_column(
-        ForeignKey('produtos.id', ondelete="CASCADE"),
-        nullable=False
+        ForeignKey("produtos.id", ondelete="CASCADE"), nullable=False
     )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)
     ano: Mapped[int] = mapped_column(nullable=False)
@@ -53,14 +52,11 @@ class Registros(Base):
     )
 
     __mapper_args__ = {
-        'polymorphic_identity': 'registros',
-        'polymorphic_on': tipo_operacao,
+        "polymorphic_identity": "registros",
+        "polymorphic_on": tipo_operacao,
     }
 
-    produto: Mapped["Produto"] = relationship(
-        'Produto',
-        back_populates='registros'
-    )
+    produto: Mapped["Produto"] = relationship("Produto", back_populates="registros")
 
     def __repr__(self):
         return (
@@ -72,36 +68,40 @@ class Registros(Base):
 
 class RegistroProcessamento(Registros):
     """Registros de processamento."""
+
     __mapper_args__ = {
-        'polymorphic_identity': 'processamento',
+        "polymorphic_identity": "processamento",
     }
 
-    def __init__(self, tipo_operacao: str = 'processamento', **kwargs):
+    def __init__(self, tipo_operacao: str = "processamento", **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 
 class RegistroProducao(Registros):
     """Registros de produção."""
+
     __mapper_args__ = {
-        'polymorphic_identity': 'producao',
+        "polymorphic_identity": "producao",
     }
 
-    def __init__(self, tipo_operacao: str = 'producao', **kwargs):
+    def __init__(self, tipo_operacao: str = "producao", **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 
 class RegistroComercio(Registros):
     """Registros de comércio."""
+
     __mapper_args__ = {
-        'polymorphic_identity': 'comercio',
+        "polymorphic_identity": "comercio",
     }
 
-    def __init__(self, tipo_operacao: str = 'comercio', **kwargs):
+    def __init__(self, tipo_operacao: str = "comercio", **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 
 class ImportacaoExportacao(Base):
     """Tabela de importação/exportação."""
+
     __tablename__ = "importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
@@ -109,12 +109,10 @@ class ImportacaoExportacao(Base):
     pais: Mapped[str] = mapped_column(String(200), nullable=False)
     classificacao: Mapped[str] = mapped_column(String(100), nullable=True)
 
-    registros_imp_exp: Mapped[
-        list["RegistroImportacaoExportacao"]
-    ] = relationship(
+    registros_imp_exp: Mapped[list["RegistroImportacaoExportacao"]] = relationship(
         "RegistroImportacaoExportacao",
         back_populates="importacao_exportacao",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self):
@@ -126,27 +124,25 @@ class ImportacaoExportacao(Base):
 
 class RegistroImportacaoExportacao(Base):
     """Tabela de registros de importação/exportação."""
+
     __tablename__ = "registros_importacao_exportacao"
 
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     id_pais: Mapped[str] = mapped_column(
-        ForeignKey(
-            "importacao_exportacao.id",
-            ondelete="CASCADE"
-        ),
-        nullable=False
+        ForeignKey("importacao_exportacao.id", ondelete="CASCADE"), nullable=False
     )
     tipo_operacao: Mapped[str] = mapped_column(String(20), nullable=False)
     ano: Mapped[int] = mapped_column(nullable=False)
     quantidade: Mapped[Decimal] = mapped_column(
-        Numeric(precision=20, scale=0), nullable=False)
+        Numeric(precision=20, scale=0), nullable=False
+    )
     valor: Mapped[Decimal] = mapped_column(
         Numeric(precision=20, scale=2), nullable=False
     )
 
     __mapper_args__ = {
-        'polymorphic_identity': 'registros_imp_exp',
-        'polymorphic_on': tipo_operacao,
+        "polymorphic_identity": "registros_imp_exp",
+        "polymorphic_on": tipo_operacao,
     }
 
     importacao_exportacao: Mapped["ImportacaoExportacao"] = relationship(
@@ -166,27 +162,30 @@ class RegistroImportacaoExportacao(Base):
 
 class RegistroImportacao(RegistroImportacaoExportacao):
     """Registros de importação."""
+
     __mapper_args__ = {
-        'polymorphic_identity': 'importacao',
+        "polymorphic_identity": "importacao",
     }
 
-    def __init__(self, tipo_operacao: str = 'importacao', **kwargs):
+    def __init__(self, tipo_operacao: str = "importacao", **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 
 class RegistroExportacao(RegistroImportacaoExportacao):
     """Registros de exportação."""
+
     __mapper_args__ = {
         "polymorphic_identity": "exportacao",
     }
 
-    def __init__(self, tipo_operacao: str = 'exportacao', **kwargs):
+    def __init__(self, tipo_operacao: str = "exportacao", **kwargs):
         super().__init__(tipo_operacao=tipo_operacao, **kwargs)
 
 
 class Users(Base):
     """Tabela de usuários."""
-    __tablename__ = 'users'
+
+    __tablename__ = "users"
 
     id = mapped_column(Integer, primary_key=True, index=True)
     email = mapped_column(String(100), unique=True)

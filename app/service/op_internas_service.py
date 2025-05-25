@@ -32,9 +32,7 @@ def find(year, opcao, subopcao=None):
         estado.repository = "scapping"
 
     if not result:
-        raise HTTPException(
-            status_code=404, detail="Registros não localizados"
-        )
+        raise HTTPException(status_code=404, detail="Registros não localizados")
 
     return result
 
@@ -48,9 +46,7 @@ def save_all(tipo_operacao):
 
     op_internas_db_repository.add_all(
         tipo_operacao,
-        op_internas_embrapa_repository.find_all(
-            tipo_registro, tipo_operacao, url
-        )
+        op_internas_embrapa_repository.find_all(tipo_registro, tipo_operacao, url),
     )
 
     return "Registros carregados com sucesso"

@@ -5,12 +5,12 @@ import pandas as pd
 from app.util import csv
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def _load(url: str, key=None) -> pd.DataFrame:
     """Carrega um DataFrame a partir de uma URL."""
-    print(f'A url final é {url}')
+    print(f"A url final é {url}")
 
     if url is None:
         print(f"Erro ao buscar o CSV para {url}.")
@@ -18,7 +18,7 @@ def _load(url: str, key=None) -> pd.DataFrame:
 
     try:
         csv_dataframe = csv.read(url, 10)
-        print(f'CSV carregado com sucesso: {url}')
+        print(f"CSV carregado com sucesso: {url}")
         return csv_dataframe
 
     except Exception as e:

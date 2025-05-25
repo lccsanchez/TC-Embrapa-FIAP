@@ -31,8 +31,7 @@ def authenticate_user(username: str, password: str):
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate user."
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user."
         )
 
     token = create_access_token(
@@ -43,10 +42,7 @@ def authenticate_user(username: str, password: str):
 
 
 def create_access_token(
-    username: str,
-    user_id: int,
-    role: str,
-    expires_delta: timedelta
+    username: str, user_id: int, role: str, expires_delta: timedelta
 ):
     """
     Cria um token JWT com informações do usuário.
@@ -75,7 +71,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     except Exception as ex:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Authentication Failed : {ex}"
+            detail=f"Authentication Failed : {ex}",
         ) from ex
 
 

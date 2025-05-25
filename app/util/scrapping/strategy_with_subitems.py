@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup
 
 
-class WithSubItems():
+class WithSubItems:
     """Estratégia para o scraping do tipo 1."""
 
     def scrape(self, html_content: str):
@@ -30,7 +30,5 @@ class WithSubItems():
             elif "tb_subitem" in data[0].get("class", []) and item_name:
                 subitem_name = data[0].get_text(strip=True)
                 subitem_value = data[1].get_text(strip=True)
-                results[item_name]["subitems"].append(
-                    {subitem_name: subitem_value}
-                )
+                results[item_name]["subitems"].append({subitem_name: subitem_value})
         return [] if empty_data else results
