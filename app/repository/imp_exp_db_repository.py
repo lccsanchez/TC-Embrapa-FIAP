@@ -1,10 +1,12 @@
 """Repositório para operações de ImportacaoExportacao no banco de dados."""
 
 from typing import List
-from sqlalchemy.orm import aliased, contains_eager
+
 from sqlalchemy import func
-from app.model.model import ImportacaoExportacao, RegistroImportacaoExportacao
+from sqlalchemy.orm import aliased, contains_eager
+
 from app.database.session import SessionLocal
+from app.model.model import ImportacaoExportacao, RegistroImportacaoExportacao
 from app.util import converter
 
 
@@ -21,14 +23,11 @@ def find(year: int, opcao: str, subopcao: str = None):
 
         subquery_ids = (
             session.query(ImportacaoExportacao.id)
-            .join(
-                registro_alias,
-                registro_alias.id_pais == ImportacaoExportacao.id
-            )
+            .join(registro_alias, registro_alias.id_pais == ImportacaoExportacao.id)
             .filter(
                 registro_alias.ano == year,
                 func.lower(registro_alias.tipo_operacao) == opcao,
-                ImportacaoExportacao.classificacao == subopcao
+                ImportacaoExportacao.classificacao == subopcao,
             )
             .group_by(ImportacaoExportacao.id, ImportacaoExportacao.source_id)
             .subquery()
@@ -38,19 +37,15 @@ def find(year: int, opcao: str, subopcao: str = None):
 
         importacoes = (
             session.query(ImportacaoExportacao)
-            .join(
-                registro_join,
-                registro_join.id_pais == ImportacaoExportacao.id
-            )
+            .join(registro_join, registro_join.id_pais == ImportacaoExportacao.id)
             .filter(
                 ImportacaoExportacao.id.in_(subquery_ids),
                 registro_join.ano == year,
-                func.lower(registro_join.tipo_operacao) == opcao
+                func.lower(registro_join.tipo_operacao) == opcao,
             )
             .options(
                 contains_eager(
-                    ImportacaoExportacao.registros_imp_exp,
-                    alias=registro_join
+                    ImportacaoExportacao.registros_imp_exp, alias=registro_join
                 )
             )
             .order_by(ImportacaoExportacao.source_id)
@@ -88,15 +83,13 @@ def remove_all(nome_registro: str, session=None):
         subquery_ids = (
             session.query(ImportacaoExportacao.id)
             .join(RegistroImportacaoExportacao)
-            .filter(
-                RegistroImportacaoExportacao.tipo_operacao == nome_registro
-            )
+            .filter(RegistroImportacaoExportacao.tipo_operacao == nome_registro)
             .subquery()
         )
 
-        session.query(ImportacaoExportacao) \
-            .filter(ImportacaoExportacao.id.in_(subquery_ids)) \
-            .delete(synchronize_session=False)
+        session.query(ImportacaoExportacao).filter(
+            ImportacaoExportacao.id.in_(subquery_ids)
+        ).delete(synchronize_session=False)
 
         if own_session:
             session.commit()

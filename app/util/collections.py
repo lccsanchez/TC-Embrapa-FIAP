@@ -1,14 +1,11 @@
 """Funções utilitárias para coleções."""
 
-from typing import List, Callable, TypeVar
+from typing import Callable, List, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
-def filter_collection(
-    data: List[T],
-    predicate: Callable[[T], bool]
-) -> List[T]:
+def filter_collection(data: List[T], predicate: Callable[[T], bool]) -> List[T]:
     """Filtra uma lista usando o predicado informado."""
     try:
         return [item for item in data if predicate(item)]

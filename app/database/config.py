@@ -1,7 +1,8 @@
 """Configuração de conexão com o banco de dados."""
 
-from urllib.parse import quote_plus
 import os
+from urllib.parse import quote_plus
+
 from dotenv import load_dotenv
 
 # Carrega as variáveis de ambiente do arquivo .env

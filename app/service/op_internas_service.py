@@ -3,16 +3,19 @@ Serviço para operações internas (produção, processamento, comercialização
 """
 
 from fastapi import HTTPException
-from app.repository import scapper_repository
-from app.repository import op_internas_embrapa_repository
-from app.repository import op_internas_db_repository
+
+from app.model import model
+from app.repository import (
+    op_internas_db_repository,
+    op_internas_embrapa_repository,
+    scapper_repository,
+)
+from app.util.url.gerenciamento_estado import estado
 from app.util.url.urls_download import (
-    url_producao,
     url_comercializacao,
+    url_producao,
     urls_processamento,
 )
-from app.model import model
-from app.util.url.gerenciamento_estado import estado
 
 
 def find(year, opcao, subopcao=None):
@@ -32,9 +35,7 @@ def find(year, opcao, subopcao=None):
         estado.repository = "scapping"
 
     if not result:
-        raise HTTPException(
-            status_code=404, detail="Registros não localizados"
-        )
+        raise HTTPException(status_code=404, detail="Registros não localizados")
 
     return result
 
@@ -48,9 +49,7 @@ def save_all(tipo_operacao):
 
     op_internas_db_repository.add_all(
         tipo_operacao,
-        op_internas_embrapa_repository.find_all(
-            tipo_registro, tipo_operacao, url
-        )
+        op_internas_embrapa_repository.find_all(tipo_registro, tipo_operacao, url),
     )
 
     return "Registros carregados com sucesso"

@@ -38,6 +38,7 @@ def test_imp_exp_to_dto():
         def __init__(self, pais, registros_imp_exp):
             self.pais = pais
             self.registros_imp_exp = registros_imp_exp
+
     items = [FakeItem("Brasil", [FakeReg(10, 100)])]
     dto = converter.imp_exp_to_dto(items)
     assert "Brasil" in dto
@@ -50,7 +51,7 @@ def test_detectar_prefixos_empty():
 def test_model_to_dto_no_subitems():
     produtos = [
         FakeProduto("vinho", "Vinho", [FakeRegistro(100)]),
-        FakeProduto("vinho_tinto", "Vinho Tinto", [FakeRegistro(0)])
+        FakeProduto("vinho_tinto", "Vinho Tinto", [FakeRegistro(0)]),
     ]
     dto = converter.model_to_dto(produtos)
     assert "vinho" in dto

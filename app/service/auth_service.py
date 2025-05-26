@@ -1,17 +1,18 @@
 """Serviço de autenticação de usuários."""
 
+from datetime import datetime, timedelta, timezone
 from os import getenv
-from datetime import timedelta, datetime, timezone
 from typing import Annotated
+
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
-from starlette import status
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
+from passlib.context import CryptContext
+from starlette import status
+
 from app.dto.user import UserDTO
 from app.repository import user_repository
-
 
 load_dotenv()
 SECRET_KEY = getenv("SECRET_KEY")
@@ -31,8 +32,7 @@ def authenticate_user(username: str, password: str):
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate user."
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user."
         )
 
     token = create_access_token(
@@ -43,10 +43,7 @@ def authenticate_user(username: str, password: str):
 
 
 def create_access_token(
-    username: str,
-    user_id: int,
-    role: str,
-    expires_delta: timedelta
+    username: str, user_id: int, role: str, expires_delta: timedelta
 ):
     """
     Cria um token JWT com informações do usuário.
@@ -75,7 +72,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     except Exception as ex:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Authentication Failed : {ex}"
+            detail=f"Authentication Failed : {ex}",
         ) from ex
 
 

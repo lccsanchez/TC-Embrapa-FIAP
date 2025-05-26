@@ -7,9 +7,7 @@ def test_get_tipo_registro():
         == "RegistroProducao"
     )
     assert (
-        op_internas_service._get_tipo_registro(
-            "comercio"
-        ).__name__
+        op_internas_service._get_tipo_registro("comercio").__name__
         == "RegistroComercio"
     )
     assert (
@@ -23,18 +21,12 @@ def test_get_tipo_url():
     assert any("producao" in str(url).lower() for url in urls.values())
 
     urls = op_internas_service._get_tipo_url("comercio")
-    assert (
-        any(
-            "comercio" in str(url).lower() or
-            "comercializacao" in str(url).lower()
-            for url in urls.values()
-        )
-        or
-        any(
-            "comercio" in str(key).lower() or
-            "comercializacao" in str(key).lower()
-            for key in urls.keys()
-        )
+    assert any(
+        "comercio" in str(url).lower() or "comercializacao" in str(url).lower()
+        for url in urls.values()
+    ) or any(
+        "comercio" in str(key).lower() or "comercializacao" in str(key).lower()
+        for key in urls.keys()
     )
 
     urls = op_internas_service._get_tipo_url("processamento")
@@ -44,7 +36,7 @@ def test_get_tipo_url():
 def test_find_uses_scrapper(monkeypatch):
     monkeypatch.setattr(
         "app.repository.scapper_repository.find_with_subitems",
-        lambda *args, **kwargs: {"scrapper": "data"}
+        lambda *args, **kwargs: {"scrapper": "data"},
     )
     result = op_internas_service.find(2023, "producao", "sub")
     assert result == {"scrapper": "data"}
@@ -53,15 +45,15 @@ def test_find_uses_scrapper(monkeypatch):
 def test_find_fallback_to_db(monkeypatch):
     monkeypatch.setattr(
         "app.repository.scapper_repository.find_with_subitems",
-        lambda *args, **kwargs: None
+        lambda *args, **kwargs: None,
     )
     monkeypatch.setattr(
         "app.service.op_internas_service._get_tipo_registro",
-        lambda *args, **kwargs: "tipo_registro_mock"
+        lambda *args, **kwargs: "tipo_registro_mock",
     )
     monkeypatch.setattr(
         "app.repository.op_internas_db_repository.find",
-        lambda *args, **kwargs: {"db": "data"}
+        lambda *args, **kwargs: {"db": "data"},
     )
 
     result = op_internas_service.find(2023, "producao", "sub")
@@ -71,15 +63,15 @@ def test_find_fallback_to_db(monkeypatch):
 def test_save_all_success(monkeypatch):
     monkeypatch.setattr(
         "app.service.op_internas_service._get_tipo_registro",
-        lambda *args, **kwargs: "tipo_registro_mock"
+        lambda *args, **kwargs: "tipo_registro_mock",
     )
     monkeypatch.setattr(
         "app.service.op_internas_service._get_tipo_url",
-        lambda *args, **kwargs: "url_mock"
+        lambda *args, **kwargs: "url_mock",
     )
     monkeypatch.setattr(
         "app.repository.op_internas_embrapa_repository.find_all",
-        lambda *args, **kwargs: ["item1", "item2"]
+        lambda *args, **kwargs: ["item1", "item2"],
     )
 
     called = {}
@@ -89,8 +81,7 @@ def test_save_all_success(monkeypatch):
         called["items"] = items
 
     monkeypatch.setattr(
-        "app.repository.op_internas_db_repository.add_all",
-        fake_add_all
+        "app.repository.op_internas_db_repository.add_all", fake_add_all
     )
 
     op_internas_service.save_all("producao")
@@ -102,15 +93,15 @@ def test_save_all_success(monkeypatch):
 def test_save_all_etl_fails(monkeypatch):
     monkeypatch.setattr(
         "app.service.op_internas_service._get_tipo_registro",
-        lambda *args, **kwargs: "tipo_registro_mock"
+        lambda *args, **kwargs: "tipo_registro_mock",
     )
     monkeypatch.setattr(
         "app.service.op_internas_service._get_tipo_url",
-        lambda *args, **kwargs: "url_mock"
+        lambda *args, **kwargs: "url_mock",
     )
     monkeypatch.setattr(
         "app.repository.op_internas_embrapa_repository.find_all",
-        lambda *args, **kwargs: None
+        lambda *args, **kwargs: None,
     )
 
     called = {}
@@ -120,8 +111,7 @@ def test_save_all_etl_fails(monkeypatch):
         called["items"] = items
 
     monkeypatch.setattr(
-        "app.repository.op_internas_db_repository.add_all",
-        fake_add_all
+        "app.repository.op_internas_db_repository.add_all", fake_add_all
     )
 
     op_internas_service.save_all("producao")

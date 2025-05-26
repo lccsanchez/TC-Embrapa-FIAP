@@ -1,14 +1,16 @@
 """Repositório para operações de usuário."""
 
 from os import getenv
+
 from dotenv import load_dotenv
 from fastapi import HTTPException
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from app.model.model import Users
-from app.dto.user import UserDTO
+
 from app.database.session import SessionLocal
+from app.dto.user import UserDTO
+from app.model.model import Users
 
 load_dotenv()
 
@@ -38,18 +40,12 @@ def create_user(user: UserDTO):
     except IntegrityError as exc:
         session.rollback()
         raise HTTPException(
-            status_code=409,
-            detail="Usuário ou e-mail já existente."
+            status_code=409, detail="Usuário ou e-mail já existente."
         ) from exc
     except Exception as exc:
         print(f"Erro no método create_user: {exc}")
         mensagem_erro = str(exc).replace(
-            getattr(
-                create_user_model,
-                "hashed_password",
-                "********"
-            ),
-            "********"
+            getattr(create_user_model, "hashed_password", "********"), "********"
         )
         raise HTTPException(
             status_code=500,
@@ -57,7 +53,7 @@ def create_user(user: UserDTO):
                 "Não foi possível criar o usuário. "
                 "Verifique os dados e tente novamente. "
                 f"{mensagem_erro}"
-            )
+            ),
         ) from exc
 
 

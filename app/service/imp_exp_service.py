@@ -1,14 +1,15 @@
 """Serviço para operações de importação e exportação."""
 
 from fastapi import HTTPException
+
+from app.model import model
 from app.repository import (
-    scapper_repository,
     imp_exp_db_repository,
     imp_exp_embrapa_repository,
+    scapper_repository,
 )
-from app.util.url.urls_download import urls_importacao, urls_exportacao
-from app.model import model
 from app.util.url.gerenciamento_estado import estado
+from app.util.url.urls_download import urls_exportacao, urls_importacao
 
 
 def find(year, opcao, subopcao=None):
@@ -30,9 +31,7 @@ def find(year, opcao, subopcao=None):
         estado.repository = "scapping"
 
     if not result:
-        raise HTTPException(
-            status_code=404, detail="Registros não localizados"
-        )
+        raise HTTPException(status_code=404, detail="Registros não localizados")
 
     return result
 

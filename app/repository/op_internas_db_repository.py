@@ -1,10 +1,12 @@
 """Repositório para operações de Produto e Registros no banco de dados."""
 
 from typing import List
+
 from sqlalchemy import and_
 from sqlalchemy.orm import joinedload, with_loader_criteria
-from app.model.model import Produto, Registros
+
 from app.database.session import SessionLocal
+from app.model.model import Produto, Registros
 from app.util import converter
 
 
@@ -16,10 +18,7 @@ def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
     opcao = str.lower(opcao)
     subopcao = None if not subopcao else str(subopcao)
 
-    filters = [
-        tipo_registro.ano == int(year),
-        tipo_registro.tipo_operacao == opcao
-    ]
+    filters = [tipo_registro.ano == int(year), tipo_registro.tipo_operacao == opcao]
     if subopcao:
         filters.append(Produto.classificacao == subopcao)
 
@@ -44,12 +43,9 @@ def find(year: int, tipo_registro: type, opcao: str, subopcao: str = None):
                 joinedload(Produto.registros),
                 with_loader_criteria(
                     Registros,
-                    (
-                        (Registros.ano == int(year)) &
-                        (Registros.tipo_operacao == opcao)
-                    ),
-                    include_aliases=True
-                )
+                    ((Registros.ano == int(year)) & (Registros.tipo_operacao == opcao)),
+                    include_aliases=True,
+                ),
             )
             .order_by(Produto.source_id)
             .all()
@@ -87,9 +83,9 @@ def remove_all(nome_registro: str, session=None):
             .filter(Registros.tipo_operacao == nome_registro)
             .subquery()
         )
-        session.query(Produto)\
-            .filter(Produto.id.in_(items.select()))\
-            .delete(synchronize_session=False)
+        session.query(Produto).filter(Produto.id.in_(items.select())).delete(
+            synchronize_session=False
+        )
         if own_session:
             session.commit()
     except Exception as exc:

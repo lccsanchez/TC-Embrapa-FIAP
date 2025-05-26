@@ -18,6 +18,7 @@ def test_filter_exception():
 
     def bad_predicate(x):
         raise ValueError("fail")
+
     result = collections.filter_collection(data, bad_predicate)
     assert result == []
 

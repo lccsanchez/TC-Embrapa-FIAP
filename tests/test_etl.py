@@ -15,6 +15,7 @@ def test_execute_returns_none_on_empty_dataframe(monkeypatch):
 def test_execute_success(monkeypatch):
     class FakeDF:
         empty = False
+
     monkeypatch.setattr(etl, "_load", lambda url, key=None: FakeDF())
     result = etl.execute({"key": "url"})
     assert isinstance(result, list)
@@ -24,6 +25,7 @@ def test_execute_success(monkeypatch):
 def test_execute_load_raises(monkeypatch):
     def raise_exception(url, key=None):
         raise Exception("fail")
+
     monkeypatch.setattr(etl, "_load", raise_exception)
     result = etl.execute({"key": "url"})
     assert result is None
