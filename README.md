@@ -35,7 +35,7 @@ Funcionalidades principais incluem:
 
 - 🔐 **Autenticação JWT**: Cadastro e login de usuários.
 - 📊 **Consulta de Dados**: Produção, comercialização, processamento, importação e exportação.
-- 📥 **Scraping & Download**: Coleta de dados do site da Embrapa ou via CSV (fallback).
+- 📥 **Scraping & Download**: Coleta de dados do site da Embrapa ou via CSV (fallback, em que os dados são baixados via CSV, mas, a consulta dos dados, em caso de contingência, é via banco de dados).
 - 💾 **Persistência**: Armazenamento dos dados em banco MySQL/Azure.
 - 🖼️ **Interface Web**: Página estática para cadastro, login e consulta.
 - 🛠️ **Administração**: Endpoints para salvar ou atualizar dados no banco.
@@ -173,7 +173,7 @@ app/
 ├── static/         # HTML, CSS, JS da interface web
 │
 alembic/            # Migrações Alembic
-certs/              # Certificados (HTTPS/JWT)
+certs/              # Certificados (banco de dados DigiCertGlobalRootCA.crt.pem.)
 tests/              # Testes automatizados
 .env                # Configurações sensíveis (não versionar)
 env_example         # Exemplo de arquivo .env
