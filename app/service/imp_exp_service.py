@@ -43,13 +43,15 @@ def save_all(tipo_operacao):
     tipo_registro = _get_tipo_registro(tipo_operacao)
     url = _get_tipo_url(tipo_operacao)
 
-    imp_exp_db_repository.add_all(
-        tipo_operacao,
-        imp_exp_embrapa_repository.find_all(tipo_registro, tipo_operacao, url),
-    )
-
-    return "Registros carregados com sucesso"
-
+    items =  imp_exp_embrapa_repository.find_all(tipo_registro, tipo_operacao, url)
+    if items:
+        imp_exp_db_repository.add_all(
+            tipo_operacao,
+            items
+        )
+        return "Registros carregados com sucesso"
+    
+    raise HTTPException(status_code=503, detail="Site do embrapa indisponível")
 
 def _get_tipo_registro(tipo_operacao: str):
     """
@@ -67,3 +69,4 @@ def _get_tipo_url(tipo_operacao: str):
     if tipo_operacao == "importacao":
         return urls_importacao
     return urls_exportacao
+

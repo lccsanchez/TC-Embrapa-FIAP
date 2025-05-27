@@ -1,5 +1,6 @@
 import os
 from logging.config import fileConfig
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
@@ -9,8 +10,18 @@ from app.model.model import Base
 
 # Carrega variáveis do .env
 load_dotenv()
-SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
 
+driver = os.getenv('DB_DRIVER', 'mysql+pymysql')  # pymysql é o driver mais comum
+user = os.getenv('DB_USER')
+password = quote_plus(os.getenv('DB_PASSWORD'))  # Codifica a senha
+host = os.getenv('DB_HOST')
+port = os.getenv('DB_PORT', '3306')  # Porta padrão do MySQL
+db_name = os.getenv('DB_NAME')
+ssl_cert = os.getenv('SSL_CERT')
+
+SQLALCHEMY_DATABASE_URI =f"{driver}://{user}:{password}@{host}:{port}/{db_name}?ssl_ca={ssl_cert}"
+
+print("url: " + SQLALCHEMY_DATABASE_URI)
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
