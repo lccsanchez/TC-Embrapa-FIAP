@@ -131,8 +131,26 @@ Via Swagger:
 - `GET /producao?year=ANO`
 - `GET /comercializacao?year=ANO`
 - `GET /processamento?year=ANO&subopcao=SUB`
+  - Subopções:
+    - Viníferas
+    - Americanas e híbridas
+    - Uvas de mesa
+    - Sem classificação
 - `GET /importacao?year=ANO&subopcao=SUB`
+  - Subopções:
+    - Vinhos de mesa
+    - Espumantes
+    - Uvas frescas
+    - Uvas passas
+    - Suco de uva
 - `GET /exportacao?year=ANO&subopcao=SUB`
+  - Subopções:
+    - Vinhos de mesa
+    - Espumantes
+    - Uvas frescas
+    - Suco de uva
+
+> **Obs:** Para todas as rotas é possível consultar os dados de 1970-2023.
 
 ### 🛠️ Administração
 - `POST /save_producao`
