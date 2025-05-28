@@ -132,23 +132,23 @@ Via Swagger:
 - `GET /comercializacao?year=ANO`
 - `GET /processamento?year=ANO&subopcao=SUB`
   - Subopções:
-    - Viníferas
-    - Americanas e híbridas
-    - Uvas de mesa
-    - Sem classificação
+    - Viníferas: ProcessaViniferas
+    - Americanas e híbridas: ProcessaAmericanas
+    - Uvas de mesa: ProcessaMesa
+    - Sem classificação: ProcessaSemclass
 - `GET /importacao?year=ANO&subopcao=SUB`
   - Subopções:
-    - Vinhos de mesa
-    - Espumantes
-    - Uvas frescas
-    - Uvas passas
-    - Suco de uva
+    - Vinhos de mesa: ImpVinhos
+    - Espumantes: ImpEspumantes
+    - Uvas frescas: ImpFrescas
+    - Uvas passas: ImpPassas
+    - Suco de uva: ImpSuco
 - `GET /exportacao?year=ANO&subopcao=SUB`
   - Subopções:
-    - Vinhos de mesa
-    - Espumantes
-    - Uvas frescas
-    - Suco de uva
+    - Vinhos de mesa: ExpVinho
+    - Espumantes: ExpEspumantes
+    - Uvas frescas: ExpUva
+    - Suco de uva: ExpSuco
 
 > **Obs:** Para todas as rotas é possível consultar os dados de 1970-2023.
 
