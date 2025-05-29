@@ -11,15 +11,27 @@ from fastapi.staticfiles import StaticFiles
 from app.routes import auth, opcoes
 from app.util.url.gerenciamento_estado import estado
 
+# Definir ordem das tags
+tags_metadata = [
+    {
+        "name": "auth",
+        "description": "Operações de autenticação e autorização",
+    },
+    {
+        "name": "opcoes",
+        "description": "Operações de consulta e salvamento de dados",
+    },
+]
+
 app = FastAPI(
     title="Embrapa API",
     version="1.0.0",
     description="Extração de dados do site da Embrapa",
+    openapi_tags=tags_metadata,
 )
 
-
-app.include_router(opcoes.router)
 app.include_router(auth.router)
+app.include_router(opcoes.router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 

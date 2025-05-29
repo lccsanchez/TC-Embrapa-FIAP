@@ -5,13 +5,7 @@ from fastapi import APIRouter, Depends
 from app.service import auth_service, imp_exp_service
 from app.service import op_internas_service as service
 
-router = APIRouter()
-
-
-@router.get("/info")
-async def root():
-    """Endpoint de status da API."""
-    return {"message": "API em execução"}
+router = APIRouter(tags=["opcoes"])
 
 
 @router.get("/producao")
