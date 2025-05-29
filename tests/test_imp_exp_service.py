@@ -99,15 +99,7 @@ def test_save_all_etl_fails(monkeypatch):
         lambda *args, **kwargs: None,
     )
 
-    called = {}
-
-    def fake_add_all(tipo, data):
-        called["tipo"] = tipo
-        called["data"] = data
-
-    monkeypatch.setattr(imp_exp_service.imp_exp_db_repository, "add_all", fake_add_all)
-
-    imp_exp_service.save_all("importacao")
-
-    assert called["tipo"] == "importacao"
-    assert called["data"] is None
+    with pytest.raises(HTTPException) as excinfo:
+        imp_exp_service.save_all("importacao")
+    assert excinfo.value.status_code == 503
+    assert "Site do embrapa indisponível" in str(excinfo.value.detail)
