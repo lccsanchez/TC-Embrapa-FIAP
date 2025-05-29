@@ -153,6 +153,7 @@ Via Swagger:
 > **Obs:** Para todas as rotas é possível consultar os dados de 1970-2023.
 
 ### 🛠️ Administração
+- Endpoints utilizados para salvar os dados no nosso banco de dados
 - `POST /save_producao`
 - `POST /save_comercializacao`
 - `POST /save_processamento`
@@ -166,9 +167,13 @@ Via Swagger:
 ## ✅ Testes
 
 Para testar a conexão com o banco de dados:
-
+- Acesse a raiz do projeto e execute
 ```bash
-python tests/test_connection.py
+pytest
+```
+- Ou:
+```bash
+pytest tests/test_auth_service.py
 ```
 
 ---
