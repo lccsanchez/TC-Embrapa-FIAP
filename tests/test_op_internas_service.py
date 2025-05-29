@@ -1,4 +1,6 @@
 from app.service import op_internas_service
+import pytest
+from fastapi import HTTPException
 
 
 def test_get_tipo_registro():
@@ -104,17 +106,8 @@ def test_save_all_etl_fails(monkeypatch):
         lambda *args, **kwargs: None,
     )
 
-    called = {}
+    with pytest.raises(HTTPException) as excinfo:
+        op_internas_service.save_all("producao")
 
-    def fake_add_all(nome, items):
-        called["nome"] = nome
-        called["items"] = items
-
-    monkeypatch.setattr(
-        "app.repository.op_internas_db_repository.add_all", fake_add_all
-    )
-
-    op_internas_service.save_all("producao")
-
-    assert called["nome"] == "producao"
-    assert called["items"] is None
+    assert excinfo.value.status_code == 503
+    assert "Site do embrapa indisponível" in str(excinfo.value.detail)
