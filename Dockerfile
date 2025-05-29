@@ -1,6 +1,5 @@
 FROM python:3.11.9 AS builder
 
-WORKDIR /app
 COPY . .
 
 RUN pip install --upgrade pip
