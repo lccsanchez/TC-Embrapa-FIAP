@@ -167,7 +167,7 @@ Via Swagger:
 ## ✅ Testes
 
 Para testar a conexão com o banco de dados:
-- Acesse a raiz do projeto e execute
+- Acesse a raiz do projeto e execute:
 ```bash
 pytest
 ```
