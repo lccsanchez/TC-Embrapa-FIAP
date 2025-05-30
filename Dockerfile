@@ -6,21 +6,19 @@ FROM python:3.11.9-slim AS builder
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
+    gcc \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip --root-user-action=ignore
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Carrega .env se existir e roda testes
-RUN set -a && \
-    [ -f .env ] && . .env || echo "No .env found" && \
-    set +a && \
-    pytest --maxfail=1 --disable-warnings --tb=short
+# Roda os testes usando apenas as variáveis do secret file do Render
+RUN pytest tests/ --maxfail=1 --disable-warnings --tb=short -v
 
 # =============================
 # Etapa 2: Imagem Final
@@ -38,7 +36,7 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt ./
 
 # Instala dependências Python
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip --root-user-action=ignore
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia apenas arquivos necessários para produção
@@ -51,8 +49,6 @@ COPY --from=builder /app/certs ./certs
 RUN useradd --create-home --shell /bin/bash appuser
 RUN chown -R appuser:appuser /app
 USER appuser
-
-EXPOSE 8000
 
 # Comando para rodar a aplicação
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
