@@ -1,53 +1,40 @@
-# Multi-stage build para rodar testes e deploy
-FROM python:3.11.9-slim AS builder
+# =============================
+# Etapa 1: Build e Teste
+# =============================
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
-# Instala dependências do sistema se necessário
 RUN apt-get update && apt-get install -y \
-    gcc \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copia arquivos de dependências primeiro (para melhor cache)
-COPY requirements.txt .
+COPY requirements.txt requirements-dev.txt ./
 
-# Instala dependências Python
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements-dev.txt
 
-# Copia todo o código da aplicação E os testes
 COPY . .
 
-# Roda os testes - se falharem, a build para aqui
-RUN pytest tests/ --maxfail=1 --disable-warnings -v
+# Carrega .env se existir e roda testes
+RUN set -a && \
+    [ -f .env ] && . .env || echo "No .env found" && \
+    set +a && \
+    pytest --maxfail=1 --disable-warnings --tb=short
 
-# Estágio de produção (só executa se os testes passarem)
-FROM python:3.11.9-slim AS production
+# =============================
+# Etapa 2: Imagem Final
+# =============================
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instala dependências mínimas para produção
-RUN apt-get update && apt-get install -y \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app /app
 
-# Copia apenas o requirements.txt
-COPY requirements.txt .
-
-# Instala dependências Python
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copia apenas os arquivos necessários para produção do builder
-COPY --from=builder /app/app ./app
-COPY --from=builder /app/alembic ./alembic
-COPY --from=builder /app/alembic.ini ./
-COPY --from=builder /app/certs ./certs
-
-# Cria usuário não-root para segurança
-RUN useradd --create-home --shell /bin/bash appuser
-RUN chown -R appuser:appuser /app
-USER appuser
+EXPOSE 8000
 
 # Comando para rodar a aplicação
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
