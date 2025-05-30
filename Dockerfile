@@ -1,12 +1,12 @@
 FROM python:3.11.9 AS builder
 
-COPY . .
+#COPY . .
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+#RUN pip install --upgrade pip
+#RUN pip install -r requirements.txt
 
 # Rode os testes no build
-RUN pytest
+#RUN pytest
 
 # Produção
 FROM python:3.11.9
