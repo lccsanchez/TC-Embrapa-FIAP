@@ -26,7 +26,7 @@ def test_scrape_table_no_rows():
     <table class="tb_base tb_dados"></table>
     """
     result = JustItems().scrape(html)
-    assert result == {}
+    assert result == []
 
 
 def test_scrape_incomplete_rows():
@@ -36,4 +36,4 @@ def test_scrape_incomplete_rows():
     </table>
     """
     result = JustItems().scrape(html)
-    assert result == {}
+    assert result == []
